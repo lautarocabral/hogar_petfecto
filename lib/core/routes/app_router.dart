@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart';
-import 'package:hogar_petfecto/features/seguridad/screens/login_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentations/login_page.dart';
 
 class AppRouter {
   final GoRouter router = GoRouter(
