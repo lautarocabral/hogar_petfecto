@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
@@ -53,6 +54,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      Image.asset(
+                        'assets/hogar_petfecto_logo.png',
+                        scale: 5,
+                      ),
+                      const Gap(20),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -87,16 +93,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       CustomButton(
                         text: 'Login',
                         onPressed: () async {
-                          await ref
-                              .read(seguridadNotifierProvider.notifier)
-                              .loginUser(
-                                _emailController.text,
-                                _passwordController.text,
-                              );
-                          if (state is SuccessState) {
-                            context.go('/home');
-                          }
-                          if (_formKey.currentState?.validate() ?? false) {}
+                          //TODO: DESCOMENTAR ESTO
+                          // if (_formKey.currentState?.validate() ?? false) {
+                          //   await ref
+                          //       .read(seguridadNotifierProvider.notifier)
+                          //       .loginUser(
+                          //         _emailController.text,
+                          //         _passwordController.text,
+                          //       );
+                          //   if (state is SuccessState) {
+                          //     context.go('/home');
+                          //   }
+                          // }
+                          context.go('/home');
                         },
                       ),
                       if (state is ErrorState)

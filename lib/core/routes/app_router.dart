@@ -11,7 +11,7 @@ class AppRouter {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => HomePage(),
+        builder: (context, state) => const HomePage(),
       ),
     ],
   );

@@ -1,194 +1,115 @@
 import 'package:flutter/material.dart';
-import 'package:hogar_petfecto/features/home/widgets/persistent_bottom_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hogar_petfecto/core/app_dimens.dart';
 
-class HomePage extends StatelessWidget {
-  final _tab1navigatorKey = GlobalKey<NavigatorState>();
-  final _tab2navigatorKey = GlobalKey<NavigatorState>();
-  final _tab3navigatorKey = GlobalKey<NavigatorState>();
-
-  HomePage({super.key});
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return PersistentBottomBar(
-      items: [
-        PersistentTabItem(
-          tab: const TabPage1(),
-          icon: Icons.home,
-          title: 'Home',
-          navigatorkey: _tab1navigatorKey,
-        ),
-        PersistentTabItem(
-          tab: const TabPage2(),
-          icon: Icons.search,
-          title: 'Search',
-          navigatorkey: _tab2navigatorKey,
-        ),
-        PersistentTabItem(
-          tab: const TabPage3(),
-          icon: Icons.person,
-          title: 'Profile',
-          navigatorkey: _tab3navigatorKey,
-        ),
-      ],
-    );
-  }
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
 
-class TabPage1 extends StatelessWidget {
-  const TabPage1({super.key});
-
+class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Tab 1')),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      appBar: AppBar(
+        title: Text(
+          'Bienvenido',
+          style: GoogleFonts.lato(
+            textStyle: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
           children: [
-            const Text('Tab 1'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Page1('Tab1')));
-                },
-                child: const Text('Go to page1'))
+            const DrawerHeader(
+              // decoration: BoxDecoration(
+              //   color: Colors.white,
+              //   image: DecorationImage(
+              //     image: AssetImage('assets/hogar_petfecto_logo.png'),
+              //     fit: BoxFit.contain,
+              //   ),
+              // ),
+              child: CircleAvatar(
+                foregroundImage: AssetImage('assets/hogar_petfecto_logo.png'),
+              ),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(Margins.largeMargin),
+        child: Column(
+          children: [
+            buildCard(),
           ],
         ),
       ),
     );
   }
-}
 
-class TabPage2 extends StatelessWidget {
-  const TabPage2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tab 2')),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Tab 2'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Page2('tab2')));
-                },
-                child: const Text('Go to page2'))
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class TabPage3 extends StatelessWidget {
-  const TabPage3({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Tab 3')),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('Tab 3'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const Page2('tab3')));
-                },
-                child: const Text('Go to page2'))
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Page1 extends StatelessWidget {
-  final String inTab;
-
-  const Page1(this.inTab, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Page 1')),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('in $inTab Page 1'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Page2(inTab)));
-                },
-                child: const Text('Go to page2'))
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Page2 extends StatelessWidget {
-  final String inTab;
-
-  const Page2(this.inTab, {super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Page 2')),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('in $inTab Page 2'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Page3(inTab)));
-                },
-                child: const Text('Go to page3'))
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class Page3 extends StatelessWidget {
-  final String inTab;
-
-  const Page3(this.inTab, {super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Page 3')),
-      body: SizedBox(
-        width: double.infinity,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('in $inTab Page 3'),
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Go back'))
-          ],
-        ),
+  Card buildCard() {
+    var heading = '\$2300 per month';
+    var subheading = '2 bed, 1 bath, 1300 sqft';
+    var cardImage = const AssetImage('assets/hogar_petfecto_intro_logo.png');
+    String supportingText =
+        'Beautiful home to rent, recently refurbished with modern appliances...';
+    return Card(
+      elevation: 4.0,
+      child: Column(
+        children: [
+          ListTile(
+            title: Text(heading),
+            subtitle: Text(subheading),
+            trailing: const Icon(Icons.favorite_outline),
+          ),
+          SizedBox(
+            height: 200.0,
+            child: Ink.image(
+              image: cardImage,
+              fit: BoxFit.cover,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            alignment: Alignment.centerLeft,
+            child: Text(supportingText),
+          ),
+          ButtonBar(
+            children: [
+              TextButton(
+                child: const Text('CONTACT AGENT'),
+                onPressed: () {/* ... */},
+              ),
+              TextButton(
+                child: const Text('LEARN MORE'),
+                onPressed: () {/* ... */},
+              )
+            ],
+          )
+        ],
       ),
     );
   }
