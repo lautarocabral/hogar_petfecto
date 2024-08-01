@@ -3,8 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
+import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
+import 'package:hogar_petfecto/features/seguridad/data/services/seguridad_service.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -24,7 +26,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
-    // Puedes agregar una validación más compleja aquí
+
     return null;
   }
 
@@ -32,63 +34,81 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
-    // Puedes agregar una validación más compleja aquí
+
     return null;
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(seguridadNotifierProvider);
+
     return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(Margins.largeMargin),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Login',
-                      style: GoogleFonts.lato(
-                        textStyle: Theme.of(context).textTheme.headlineMedium,
+      body: state is LoadingState
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(Margins.largeMargin),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Login',
+                            style: GoogleFonts.lato(
+                              textStyle:
+                                  Theme.of(context).textTheme.headlineMedium,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 20),
+                      CustomTextField(
+                        hintText: 'Email',
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
+                        focusNode: _emailFocusNode,
+                        nextFocusNode: _passwordFocusNode,
+                        validator: _emailValidator,
+                      ),
+                      const SizedBox(height: 20),
+                      CustomTextField(
+                        hintText: 'Password',
+                        obscureText: true,
+                        controller: _passwordController,
+                        textInputAction: TextInputAction.done,
+                        focusNode: _passwordFocusNode,
+                        validator: _passwordValidator,
+                      ),
+                      const SizedBox(height: 40),
+                      CustomButton(
+                        text: 'Login',
+                        onPressed: () async {
+                          await ref
+                              .read(seguridadNotifierProvider.notifier)
+                              .loginUser(
+                                _emailController.text,
+                                _passwordController.text,
+                              );
+                          if (state is SuccessState) {
+                            context.go('/home');
+                          }
+                          if (_formKey.currentState?.validate() ?? false) {}
+                        },
+                      ),
+                      if (state is ErrorState)
+                        Text(
+                          'Error: ${state.message}',
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'Email',
-                  controller: _emailController,
-                  textInputAction: TextInputAction.next,
-                  focusNode: _emailFocusNode,
-                  nextFocusNode: _passwordFocusNode,
-                  validator: _emailValidator,
-                ),
-                const SizedBox(height: 20),
-                CustomTextField(
-                  hintText: 'Password',
-                  obscureText: true,
-                  controller: _passwordController,
-                  textInputAction: TextInputAction.done,
-                  focusNode: _passwordFocusNode,
-                  validator: _passwordValidator,
-                ),
-                const SizedBox(height: 40),
-                CustomButton(
-                  text: 'Login',
-                  onPressed: () {
-                    context.go('/home');
-                    if (_formKey.currentState?.validate() ?? false) {}
-                  },
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

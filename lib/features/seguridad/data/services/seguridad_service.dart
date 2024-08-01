@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hogar_petfecto/core/state/generic_state.dart';
+import 'package:hogar_petfecto/features/seguridad/data/models/seguridad_model.dart';
 import 'package:hogar_petfecto/features/seguridad/data/repository/seguridad_repository.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
 
-class SeguridadNotifier extends StateNotifier<GenericState> {
+class SeguridadNotifier extends StateNotifier<GenericState<dynamic>> {
   final SeguridadRepositoryModel repository;
 
   SeguridadNotifier(this.repository) : super(InitialState());
@@ -12,7 +13,20 @@ class SeguridadNotifier extends StateNotifier<GenericState> {
     state = LoadingState();
     final response = await repository.fetchAll();
     if (response.success) {
-      state = SuccessState(response.data!);
+      state = SuccessState<List<SeguridadModel>>(response.data!);
+    } else {
+      state = ErrorState(response.message ?? 'An error occurred');
+    }
+  }
+
+  Future<void> loginUser(String user, String password) async {
+    state = LoadingState();
+    final response = await repository.create({
+      'user': user,
+      'password': password,
+    });
+    if (response.success) {
+      state = SuccessState<dynamic>(response.data!);
     } else {
       state = ErrorState(response.message ?? 'An error occurred');
     }
@@ -20,7 +34,7 @@ class SeguridadNotifier extends StateNotifier<GenericState> {
 }
 
 final seguridadNotifierProvider =
-    StateNotifierProvider<SeguridadNotifier, GenericState>((ref) {
+    StateNotifierProvider<SeguridadNotifier, GenericState<dynamic>>((ref) {
   final repository = ref.watch(seguridadRepositoryProvider);
   return SeguridadNotifier(repository);
 });

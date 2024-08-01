@@ -12,7 +12,7 @@ class InitialState<T> extends GenericState<T> {}
 class LoadingState<T> extends GenericState<T> {}
 
 class SuccessState<T> extends GenericState<T> {
-  final List<T> data;
+  final T data;
 
   const SuccessState(this.data);
 
