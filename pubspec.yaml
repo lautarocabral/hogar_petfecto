@@ -36,6 +36,7 @@ flutter:
   assets:
     - assets/hogar_petfecto_logo.png
     - assets/hogar_petfecto_intro_logo.png
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -12,6 +12,8 @@ import 'package:hogar_petfecto/features/seguridad/data/services/seguridad_servic
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
+  static const String route = '/';
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
 }
@@ -105,7 +107,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           //     context.go('/home');
                           //   }
                           // }
-                          context.go('/home');
+                          // context.push('/home');
+                          GoRouter.of(context).push('/home');
                         },
                       ),
                       if (state is ErrorState)
