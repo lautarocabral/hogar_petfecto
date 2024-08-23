@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascota_page.dart';
 
 class ListadoMascotasPage extends ConsumerStatefulWidget {
   const ListadoMascotasPage({super.key});
@@ -41,46 +42,31 @@ class _ListadoMascotasPageState extends ConsumerState<ListadoMascotasPage> {
     );
   }
 
-  Card buildCard() {
+  Widget buildCard() {
     var heading = 'Basilio';
     var subheading = '3 años';
     var cardImage = const AssetImage('assets/images/basilio.png');
     // String supportingText = 'Convive con otros animales, apto departamento ...';
-    return Card(
-      elevation: 4.0,
-      child: Column(
-        children: [
-          ListTile(
-            title: Text(heading),
-            subtitle: Text(subheading),
-            trailing: const Icon(Icons.favorite_outline),
-          ),
-          SizedBox(
-            height: 75.0, // Altura ajustada para la cuadrícula
-            child: Ink.image(
-              image: cardImage,
-              fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () => context.push(DescripcionMascotaPage.route),
+      child: Card(
+        elevation: 4.0,
+        child: Column(
+          children: [
+            ListTile(
+              title: Text(heading),
+              subtitle: Text(subheading),
+              trailing: const Icon(Icons.favorite_outline),
             ),
-          ),
-          // Container(
-          //   padding: const EdgeInsets.all(
-          //       8.0), // Espaciado reducido para la cuadrícula
-          //   alignment: Alignment.centerLeft,
-          //   child: Text(supportingText),
-          // ),
-          // OverflowBar(
-          //   children: [
-          //     TextButton(
-          //       child: const Text('Adoptar'),
-          //       onPressed: () {/* ... */},
-          //     ),
-          //     TextButton(
-          //       child: const Text('Mas info'),
-          //       onPressed: () {/* ... */},
-          //     )
-          //   ],
-          // )
-        ],
+            SizedBox(
+              height: 75.0, // Altura ajustada para la cuadrícula
+              child: Ink.image(
+                image: cardImage,
+                fit: BoxFit.fill,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
