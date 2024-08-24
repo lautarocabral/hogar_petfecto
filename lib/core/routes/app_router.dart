@@ -5,6 +5,9 @@ import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascot
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/common/presentation/custom_success_page.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_producto_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
+import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
 
 class AppRouter {
@@ -43,6 +46,23 @@ class AppRouter {
             message: message,
             onAccept: onAccept ?? () => context.go(HomePage.route),
           );
+        },
+      ),
+      // Publicacion
+      GoRoute(
+        path: CargaMascota.route,
+        builder: (context, state) => const CargaMascota(),
+      ),
+      // Merchandising
+      GoRoute(
+        path: ListadoProductos.route,
+        builder: (context, state) => const ListadoProductos(),
+      ),
+      GoRoute(
+        path: DescripcionProductoPage.route,
+        builder: (context, state) {
+          final product = state.extra as Product;
+          return DescripcionProductoPage(product: product);
         },
       ),
     ],

@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
+import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -18,79 +20,80 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'Inicio',
-            style: GoogleFonts.lato(
-              textStyle: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
-          leading: Builder(
-            builder: (context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            },
+      appBar: AppBar(
+        title: Text(
+          'Inicio',
+          style: GoogleFonts.lato(
+            textStyle: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              child: CircleAvatar(
+                foregroundImage: AssetImage('assets/hogar_petfecto_logo.png'),
+              ),
+            ),
+            ListTile(
+              title: const Text('Gestion de veterinarias'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Gestion de merchandising'),
+              onTap: () {},
+            ),
+            ListTile(
+              title: const Text('Gestion de usuarios'),
+              onTap: () {},
+            ),
+          ],
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(Margins.largeMargin),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const DrawerHeader(
-                child: CircleAvatar(
-                  foregroundImage: AssetImage('assets/hogar_petfecto_logo.png'),
-                ),
-              ),
-              ListTile(
-                title: const Text('Gestion de veterinarias'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: const Text('Gestion de merchandising'),
-                onTap: () {},
-              ),
-              ListTile(
-                title: const Text('Gestion de usuarios'),
-                onTap: () {},
-              ),
+              buildWelcomeCard(),
+              const SizedBox(height: 20),
+              buildBannerButton(
+                  context, 'Encontra a tu amigo peludo!', Icons.pets, () {
+                context.push(ListadoMascotasPage.route);
+              }),
+              const SizedBox(height: 10),
+              buildBannerButton(context, 'Encontrale un hogar!', Icons.store,
+                  () {
+                context.push(CargaMascota.route);
+              }),
+              const SizedBox(height: 10),
+              buildBannerButton(
+                  context, 'Encontra tu veterinaria!', Icons.local_hospital,
+                  () {
+                GoRouter.of(context).pushNamed('/');
+              }),
+              const SizedBox(height: 10),
+              buildBannerButton(context, 'Merchandising', Icons.info, () {
+                context.push(ListadoProductos.route);
+              }),
             ],
           ),
         ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(Margins.largeMargin),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildWelcomeCard(),
-                const SizedBox(height: 20),
-                buildBannerButton(
-                    context, 'Encontra a tu amigo peludo!', Icons.pets, () {
-                  context.push(ListadoMascotasPage.route);
-                }),
-                const SizedBox(height: 10),
-                buildBannerButton(context, 'Encontrale un hogar!', Icons.store,
-                    () {
-                  GoRouter.of(context).pushNamed('/');
-                }),
-                const SizedBox(height: 10),
-                buildBannerButton(
-                    context, 'Encontra tu veterinaria!', Icons.local_hospital,
-                    () {
-                  GoRouter.of(context).pushNamed('/');
-                }),
-                const SizedBox(height: 10),
-                buildBannerButton(context, 'Merchandising', Icons.info, () {
-                  GoRouter.of(context).pushNamed('/');
-                }),
-              ],
-            ),
-          ),
-        ));
+      ),
+    );
   }
 
   Card buildWelcomeCard() {
