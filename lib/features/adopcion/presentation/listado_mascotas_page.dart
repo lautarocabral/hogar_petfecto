@@ -32,6 +32,7 @@ class _ListadoMascotasPageState extends ConsumerState<ListadoMascotasPage> {
             crossAxisCount: 2, // Número de columnas
             crossAxisSpacing: 10.0, // Espacio horizontal entre las tarjetas
             mainAxisSpacing: 10.0, // Espacio vertical entre las tarjetas
+            childAspectRatio: 0.7, // Ajusta la proporción entre el ancho y alto de las tarjetas
           ),
           itemCount: 10, // Número de tarjetas que quieres mostrar
           itemBuilder: (context, index) {
@@ -46,23 +47,33 @@ class _ListadoMascotasPageState extends ConsumerState<ListadoMascotasPage> {
     var heading = 'Basilio';
     var subheading = '3 años';
     var cardImage = const AssetImage('assets/images/basilio.png');
-    // String supportingText = 'Convive con otros animales, apto departamento ...';
+
     return GestureDetector(
       onTap: () => context.push(DescripcionMascotaPage.route),
       child: Card(
         elevation: 4.0,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch, // Asegura que los hijos ocupen todo el ancho disponible
           children: [
-            ListTile(
-              title: Text(heading),
-              subtitle: Text(subheading),
-              trailing: const Icon(Icons.favorite_outline),
-            ),
-            SizedBox(
-              height: 75.0, // Altura ajustada para la cuadrícula
+            Expanded(
               child: Ink.image(
                 image: cardImage,
-                fit: BoxFit.fill,
+                fit: BoxFit.cover, // Ajusta la imagen sin recortes
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                contentPadding: EdgeInsets.zero, // Elimina el padding adicional del ListTile
+                title: Text(
+                  heading,
+                  style: const TextStyle(fontSize: 16), // Ajusta el tamaño del texto
+                ),
+                subtitle: Text(
+                  subheading,
+                  style: const TextStyle(fontSize: 14), // Ajusta el tamaño del subtítulo
+                ),
+                trailing: const Icon(Icons.favorite_outline),
               ),
             ),
           ],

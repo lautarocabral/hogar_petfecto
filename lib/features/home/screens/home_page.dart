@@ -6,6 +6,7 @@ import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -71,7 +72,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               buildWelcomeCard(),
               const SizedBox(height: 20),
               buildBannerButton(
-                  context, 'Encontra a tu amigo peludo!', Icons.pets, () {
+                  context, 'Encontra a tu amigo \npeludo!', Icons.pets, () {
                 context.push(ListadoMascotasPage.route);
               }),
               const SizedBox(height: 10),
@@ -83,7 +84,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               buildBannerButton(
                   context, 'Encontra tu veterinaria!', Icons.local_hospital,
                   () {
-                GoRouter.of(context).pushNamed('/');
+                context.push(VeterinariaMapPage.route);
               }),
               const SizedBox(height: 10),
               buildBannerButton(context, 'Merchandising', Icons.info, () {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/checkout_carrito_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_producto_page.dart';
 
 class ListadoProductos extends StatefulWidget {
@@ -7,10 +8,10 @@ class ListadoProductos extends StatefulWidget {
   static const String route = '/listado_productos';
 
   @override
-  _ListadoProductosState createState() => _ListadoProductosState();
+  ListadoProductosState createState() => ListadoProductosState();
 }
 
-class _ListadoProductosState extends State<ListadoProductos> {
+class ListadoProductosState extends State<ListadoProductos> {
   // Controlador de la barra de búsqueda
   final TextEditingController _searchController = TextEditingController();
   List<Product> _filteredProducts = [];
@@ -58,6 +59,21 @@ class _ListadoProductosState extends State<ListadoProductos> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton.icon(
+            onPressed: () {
+              // Aquí se manejará la lógica para agregar al carrito
+              context.push(CheckoutCarritoPage.route, extra: {
+                'cartItems': [],
+              });
+            },
+            icon: const Icon(Icons.shopping_cart),
+            label: const Text('Agregar al Carrito'),
+          ),
+        ],
+      ),
       appBar: AppBar(
         title: const Text('Tienda'),
         bottom: PreferredSize(

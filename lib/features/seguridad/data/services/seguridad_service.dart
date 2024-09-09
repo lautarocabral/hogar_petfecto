@@ -2,12 +2,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:hogar_petfecto/features/seguridad/data/models/seguridad_model.dart';
 import 'package:hogar_petfecto/features/seguridad/data/repository/seguridad_repository.dart';
-import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
 
-class SeguridadNotifier extends StateNotifier<GenericState<dynamic>> {
+class SeguridadStateNotifier extends StateNotifier<GenericState<dynamic>> {
   final SeguridadRepositoryModel repository;
 
-  SeguridadNotifier(this.repository) : super(InitialState());
+  SeguridadStateNotifier(this.repository) : super(InitialState());
 
   Future<void> fetchAllModels() async {
     state = LoadingState();
@@ -21,7 +20,8 @@ class SeguridadNotifier extends StateNotifier<GenericState<dynamic>> {
 
   Future<void> loginUser(String user, String password) async {
     state = LoadingState();
-    final response = await repository.create({
+
+    final response = await repository.loginUser({
       'user': user,
       'password': password,
     });
@@ -32,9 +32,3 @@ class SeguridadNotifier extends StateNotifier<GenericState<dynamic>> {
     }
   }
 }
-
-final seguridadNotifierProvider =
-    StateNotifierProvider<SeguridadNotifier, GenericState<dynamic>>((ref) {
-  final repository = ref.watch(seguridadRepositoryProvider);
-  return SeguridadNotifier(repository);
-});

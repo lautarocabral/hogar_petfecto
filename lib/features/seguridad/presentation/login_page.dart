@@ -4,10 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
-import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
-import 'package:hogar_petfecto/features/seguridad/data/services/seguridad_service.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
+import 'package:hogar_petfecto/core/state/generic_state.dart'; // Importa tu GenericState
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -29,7 +29,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your email';
     }
-
     return null;
   }
 
@@ -37,7 +36,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     if (value == null || value.isEmpty) {
       return 'Please enter your password';
     }
-
     return null;
   }
 
@@ -46,81 +44,95 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final state = ref.watch(seguridadNotifierProvider);
 
     return Scaffold(
-      body: state is LoadingState
-          ? const Center(child: CircularProgressIndicator())
-          : SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(Margins.largeMargin),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/hogar_petfecto_logo.png',
-                        scale: 5,
-                      ),
-                      const Gap(20),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Login',
-                            style: GoogleFonts.lato(
-                              textStyle:
-                                  Theme.of(context).textTheme.headlineMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextField(
-                        hintText: 'Email',
-                        controller: _emailController,
-                        textInputAction: TextInputAction.next,
-                        focusNode: _emailFocusNode,
-                        nextFocusNode: _passwordFocusNode,
-                        validator: _emailValidator,
-                      ),
-                      const SizedBox(height: 20),
-                      CustomTextField(
-                        hintText: 'Password',
-                        obscureText: true,
-                        controller: _passwordController,
-                        textInputAction: TextInputAction.done,
-                        focusNode: _passwordFocusNode,
-                        validator: _passwordValidator,
-                      ),
-                      const SizedBox(height: 40),
-                      CustomButton(
-                        text: 'Login',
-                        onPressed: () async {
-                          //TODO: DESCOMENTAR ESTO
-                          // if (_formKey.currentState?.validate() ?? false) {
-                          //   await ref
-                          //       .read(seguridadNotifierProvider.notifier)
-                          //       .loginUser(
-                          //         _emailController.text,
-                          //         _passwordController.text,
-                          //       );
-                          //   if (state is SuccessState) {
-                          //     context.go('/home');
-                          //   }
-                          // }
-                          // context.push('/home');
-                          GoRouter.of(context).push('/home');
-                        },
-                      ),
-                      if (state is ErrorState)
-                        Text(
-                          'Error: ${state.message}',
-                          style: const TextStyle(color: Colors.red),
-                        ),
-                    ],
-                  ),
-                ),
+      body: _buildState(state),
+    );
+  }
+
+  Widget _buildState(GenericState state) {
+    if (state is LoadingState) {
+      return const Center(child: CircularProgressIndicator());
+    } else if (state is SuccessState) {
+      // Redirige al home en caso de éxito
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.go('/home');
+      });
+      return const SizedBox.shrink(); 
+    } else {
+      return _buildLoginForm(state);
+    }
+  }
+
+  Widget _buildLoginForm(GenericState state) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(Margins.largeMargin),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                'assets/hogar_petfecto_logo.png',
+                scale: 5,
               ),
-            ),
+              const Gap(20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    'Login',
+                    style: GoogleFonts.lato(
+                      textStyle: Theme.of(context).textTheme.headlineMedium,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              CustomTextField(
+                hintText: 'Email',
+                controller: _emailController,
+                textInputAction: TextInputAction.next,
+                focusNode: _emailFocusNode,
+                nextFocusNode: _passwordFocusNode,
+                validator: _emailValidator,
+              ),
+              const SizedBox(height: 20),
+              CustomTextField(
+                hintText: 'Password',
+                obscureText: true,
+                controller: _passwordController,
+                textInputAction: TextInputAction.done,
+                focusNode: _passwordFocusNode,
+                validator: _passwordValidator,
+              ),
+              const SizedBox(height: 40),
+              CustomButton(
+                text: 'Login',
+                onPressed: () async {
+                  // if (_formKey.currentState?.validate() ?? false) {
+                  //   await ref
+                  //       .read(seguridadNotifierProvider.notifier)
+                  //       .loginUser(
+                  //         _emailController.text,
+                  //         _passwordController.text,
+                  //       );
+                  // }
+                  context.go('/home');
+                },
+              ),
+              if (state is ErrorState)
+                Text(
+                  state.message,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 14,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

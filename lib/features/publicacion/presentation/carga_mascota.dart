@@ -12,10 +12,10 @@ class CargaMascota extends StatefulWidget {
   static const String route = '/cargar_mascota';
 
   @override
-  _CargaMascotaState createState() => _CargaMascotaState();
+  CargaMascotaState createState() => CargaMascotaState();
 }
 
-class _CargaMascotaState extends State<CargaMascota> {
+class CargaMascotaState extends State<CargaMascota> {
   final _formKey = GlobalKey<FormState>();
 
   // Controladores de los campos de texto
