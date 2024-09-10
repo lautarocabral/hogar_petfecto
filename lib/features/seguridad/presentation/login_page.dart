@@ -7,7 +7,8 @@ import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
-import 'package:hogar_petfecto/core/state/generic_state.dart'; // Importa tu GenericState
+import 'package:hogar_petfecto/core/state/generic_state.dart';
+import 'package:permission_handler/permission_handler.dart'; // Importa tu GenericState
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -24,6 +25,32 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   final FocusNode _emailFocusNode = FocusNode();
   final FocusNode _passwordFocusNode = FocusNode();
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    // Llamar a la función asincrónica desde initState
+    _initializePermissions();
+  }
+
+  Future<void> _initializePermissions() async {
+    await requestPermissions();
+  }
+
+  Future<void> requestPermissions() async {
+    var status = await Permission.location.request();
+
+    if (status.isGranted) {
+    } else {
+      // Si el permiso es denegado, puedes volver a solicitarlo o mostrar un mensaje.
+      // También puedes verificar si el usuario ha seleccionado "No volver a preguntar".
+      var newStatus = await Permission.location.request();
+      if (newStatus.isPermanentlyDenied) {
+        // Puedes abrir la configuración para que el usuario habilite los permisos manualmente
+        openAppSettings();
+      }
+    }
+  }
 
   String? _emailValidator(String? value) {
     if (value == null || value.isEmpty) {
@@ -56,7 +83,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         context.go('/home');
       });
-      return const SizedBox.shrink(); 
+      return const SizedBox.shrink();
     } else {
       return _buildLoginForm(state);
     }
