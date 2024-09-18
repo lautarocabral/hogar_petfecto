@@ -21,7 +21,7 @@ class VeterinariaMapPage extends ConsumerStatefulWidget {
 class _VeterinariaMapPageState extends ConsumerState<VeterinariaMapPage> {
   // Definimos la ubicación inicial en coordenadas de latitud y longitud
   final LatLng initialLocation =
-      LatLng(19.432608, -99.133209); // Ejemplo: Ciudad de México
+      const LatLng(19.432608, -99.133209); // Ejemplo: Ciudad de México
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +36,13 @@ class _VeterinariaMapPageState extends ConsumerState<VeterinariaMapPage> {
           TileLayer(
             urlTemplate:
                 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', // Usamos OpenStreetMap
-            subdomains: ['a', 'b', 'c'],
+            subdomains: const ['a', 'b', 'c'],
           ),
           // Añadimos la capa de marcadores para las veterinarias
           MarkerLayer(
             markers: [
               Marker(
-                point: LatLng(19.432608,
+                point: const LatLng(19.432608,
                     -99.133209), // Ejemplo de ubicación de una veterinaria
                 width: 80.0,
                 height: 80.0,

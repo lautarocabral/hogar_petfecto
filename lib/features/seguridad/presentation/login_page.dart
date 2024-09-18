@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
 import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:permission_handler/permission_handler.dart'; // Importa tu GenericState
@@ -131,6 +132,20 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 textInputAction: TextInputAction.done,
                 focusNode: _passwordFocusNode,
                 validator: _passwordValidator,
+              ),
+              const SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  context.push(SignUpScreen.route);
+                },
+                child: const Text(
+                  'Sign Up',
+                  style: TextStyle(
+                    fontSize: 20,
+                    decoration: TextDecoration.underline,
+                    color: Colors.blue,
+                  ),
+                ),
               ),
               const SizedBox(height: 40),
               CustomButton(

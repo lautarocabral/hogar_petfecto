@@ -8,6 +8,7 @@ class CustomTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final FocusNode? nextFocusNode;
   final String? Function(String?)? validator;
+  final TextInputType? textInputType;
 
   const CustomTextField({
     super.key,
@@ -18,6 +19,7 @@ class CustomTextField extends StatelessWidget {
     this.focusNode,
     this.nextFocusNode,
     this.validator,
+    this.textInputType,
   });
 
   @override
@@ -39,6 +41,7 @@ class CustomTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
+      keyboardType: textInputType,
     );
   }
 }

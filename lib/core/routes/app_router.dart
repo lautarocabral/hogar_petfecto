@@ -11,6 +11,9 @@ import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_p
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
 
@@ -20,9 +23,22 @@ class AppRouter {
     //     HomePage
     //         .route, // Restaurar la última ruta o usar una ruta predeterminada
     routes: [
+      // Seguridad
       GoRoute(
         path: LoginPage.route,
         builder: (context, state) => const LoginPage(),
+      ),
+      GoRoute(
+        path: SignUpScreen.route,
+        builder: (context, state) => const SignUpScreen(),
+      ),
+      GoRoute(
+        path: SignUpVeterinariaPage.route,
+        builder: (context, state) => const SignUpVeterinariaPage(),
+      ),
+      GoRoute(
+        path: SubscriptionPage.route,
+        builder: (context, state) => const SubscriptionPage(),
       ),
       GoRoute(
         path: HomePage.route,
@@ -86,7 +102,7 @@ class AppRouter {
       GoRoute(
         path: CheckoutCarritoPage.route,
         builder: (context, state) {
-         final args = state.extra as Map<String, dynamic>?;
+          final args = state.extra as Map<String, dynamic>?;
           final items = args!['cartItems'] as List<dynamic>;
           final totalPrice = items.fold(0.0, (sum, item) => sum + item.price);
           return CheckoutCarritoPage(
