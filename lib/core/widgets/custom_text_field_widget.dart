@@ -9,6 +9,7 @@ class CustomTextField extends StatelessWidget {
   final FocusNode? nextFocusNode;
   final String? Function(String?)? validator;
   final TextInputType? textInputType;
+  final Widget? prefixIcon;
 
   const CustomTextField({
     super.key,
@@ -20,6 +21,7 @@ class CustomTextField extends StatelessWidget {
     this.nextFocusNode,
     this.validator,
     this.textInputType,
+    this.prefixIcon,
   });
 
   @override
@@ -36,6 +38,7 @@ class CustomTextField extends StatelessWidget {
       },
       validator: validator,
       decoration: InputDecoration(
+        prefixIcon: prefixIcon,
         hintText: hintText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),

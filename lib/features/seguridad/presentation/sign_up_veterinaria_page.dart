@@ -20,7 +20,7 @@ class SignUpVeterinariaPageState extends State<SignUpVeterinariaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: const CustomAppBarWidget(title: 'Registro de veterinaria'),
+     appBar: const CustomAppBarWidget(title: 'Veterinaria'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

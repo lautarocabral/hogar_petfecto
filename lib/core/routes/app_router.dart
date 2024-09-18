@@ -11,7 +11,9 @@ import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_p
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_cliente_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
@@ -39,6 +41,14 @@ class AppRouter {
       GoRoute(
         path: SubscriptionPage.route,
         builder: (context, state) => const SubscriptionPage(),
+      ),
+      GoRoute(
+        path: SignUpAdoptanteClientePage.route,
+        builder: (context, state) => const SignUpAdoptanteClientePage(),
+      ),
+      GoRoute(
+        path: SignUpProtectoraPage.route,
+        builder: (context, state) => const SignUpProtectoraPage(),
       ),
       GoRoute(
         path: HomePage.route,
