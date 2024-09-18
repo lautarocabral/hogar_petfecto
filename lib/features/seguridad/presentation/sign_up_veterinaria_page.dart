@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
 
@@ -19,9 +20,7 @@ class SignUpVeterinariaPageState extends State<SignUpVeterinariaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Registro de Veterinaria'),
-      ),
+     appBar: const CustomAppBarWidget(title: 'Registro de veterinaria'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

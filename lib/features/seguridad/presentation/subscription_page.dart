@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart'; // Importa el paquete
 
 enum SubscriptionPlan { Mensual, Anual }
@@ -37,9 +38,7 @@ class SubscriptionPageState extends State<SubscriptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Suscripción'),
-      ),
+      appBar: const CustomAppBarWidget(title: 'Suscripcion'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
