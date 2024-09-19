@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
-import 'package:hogar_petfecto/features/home/screens/home_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_cliente_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';

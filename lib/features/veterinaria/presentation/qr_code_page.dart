@@ -10,7 +10,7 @@ class QrCodePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'Mi QR'),
+      appBar: const CustomAppBarWidget(title: 'Mi QR'),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

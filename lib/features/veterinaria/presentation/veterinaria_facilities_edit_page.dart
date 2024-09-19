@@ -19,11 +19,11 @@ class VeterinariaFacilitiesEditPage extends StatefulWidget {
   static const String route = '/veterinaria_facilities_edit';
 
   @override
-  _VeterinariaFacilitiesEditPageState createState() =>
-      _VeterinariaFacilitiesEditPageState();
+  VeterinariaFacilitiesEditPageState createState() =>
+      VeterinariaFacilitiesEditPageState();
 }
 
-class _VeterinariaFacilitiesEditPageState
+class VeterinariaFacilitiesEditPageState
     extends State<VeterinariaFacilitiesEditPage> {
   bool _isEditing = false;
   late List<String> _instalacionesSeleccionadas;

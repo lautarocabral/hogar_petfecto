@@ -9,10 +9,10 @@ class AltaProductoPage extends StatefulWidget {
   static const String route = '/alta_producto';
 
   @override
-  _AltaProductoPageState createState() => _AltaProductoPageState();
+  AltaProductoPageState createState() => AltaProductoPageState();
 }
 
-class _AltaProductoPageState extends State<AltaProductoPage> {
+class AltaProductoPageState extends State<AltaProductoPage> {
   final TextEditingController descripcionController = TextEditingController();
   final TextEditingController stockController = TextEditingController();
   final TextEditingController precioController = TextEditingController();
@@ -75,7 +75,8 @@ class _AltaProductoPageState extends State<AltaProductoPage> {
             // Campo de precio
             TextField(
               controller: precioController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:
+                  const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: 'Precio',
                 border: OutlineInputBorder(

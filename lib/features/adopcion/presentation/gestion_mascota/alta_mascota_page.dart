@@ -100,7 +100,7 @@ class AltaMascotaPageState extends State<AltaMascotaPage> {
             // Campo de peso
             TextField(
               controller: pesoController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType:const TextInputType.numberWithOptions(decimal: true),
               decoration: InputDecoration(
                 labelText: 'Peso (kg)',
                 border: OutlineInputBorder(
@@ -124,7 +124,7 @@ class AltaMascotaPageState extends State<AltaMascotaPage> {
                 if (pickedDate != null) {
                   setState(() {
                     fechaNacimientoController.text =
-                        "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                        '${pickedDate.day}/${pickedDate.month}/${pickedDate.year}';
                   });
                 }
               },

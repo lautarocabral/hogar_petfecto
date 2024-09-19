@@ -44,7 +44,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 hintText: 'Dirección de la Protectora',
                 controller: addressController,
                 textInputAction: TextInputAction.next,
-                prefixIcon: Icon(Icons.location_on), // Icono decorativo
+                prefixIcon: const Icon(Icons.location_on), // Icono decorativo
               ),
               const SizedBox(height: 16.0),
 
@@ -53,7 +53,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 hintText: 'Capacidad de la Protectora (cantidad de mascotas)',
                 controller: capacityController,
                 textInputAction: TextInputAction.next,
-                prefixIcon: Icon(Icons.home), // Icono decorativo
+                prefixIcon: const Icon(Icons.home), // Icono decorativo
                 keyboardType: TextInputType.number, // Solo números
               ),
               const SizedBox(height: 16.0),
@@ -63,7 +63,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 hintText: 'Número de Voluntarios',
                 controller: volunteersController,
                 textInputAction: TextInputAction.next,
-                prefixIcon: Icon(Icons.people), // Icono decorativo
+                prefixIcon: const Icon(Icons.people), // Icono decorativo
                 keyboardType: TextInputType.number, // Solo números
               ),
               const SizedBox(height: 16.0),
@@ -73,7 +73,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 hintText: 'Cantidad de Mascotas bajo Cuidado',
                 controller: mascotasController,
                 textInputAction: TextInputAction.done,
-                prefixIcon: Icon(Icons.pets), // Icono decorativo
+                prefixIcon: const Icon(Icons.pets), // Icono decorativo
                 keyboardType: TextInputType.number, // Solo números
               ),
               const SizedBox(height: 24.0),
@@ -85,14 +85,16 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                     // Acción de continuar
                     context.go(HomePage.route);
                   },
-                  icon: Icon(Icons.arrow_forward), // Icono decorativo
+                  icon: const Icon(Icons.arrow_forward), // Icono decorativo
                   label: const Text(
                     'Continuar',
                     style: TextStyle(fontSize: 18),
                   ),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blueAccent, // Cambia el color del botón
-                    backgroundColor: Colors.white, // Cambia el color del texto/ícono
+                    foregroundColor:
+                        Colors.blueAccent, // Cambia el color del botón
+                    backgroundColor:
+                        Colors.white, // Cambia el color del texto/ícono
                     minimumSize: const Size(
                         double.infinity, 50), // Botón de ancho completo
                     shape: RoundedRectangleBorder(

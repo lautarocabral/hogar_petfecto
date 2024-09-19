@@ -45,8 +45,8 @@ class ListaUsuariosPage extends StatelessWidget {
                                 'U$index'), // Iniciales o avatar del usuario
                           ),
                           title: Text('Usuario $index'),
-                          subtitle:
-                              Text('Rol: Cliente adoptante'), // Rol del usuario
+                          subtitle: const Text(
+                              'Rol: Cliente adoptante'), // Rol del usuario
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

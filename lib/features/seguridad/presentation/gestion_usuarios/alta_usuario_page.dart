@@ -13,10 +13,10 @@ class AltaUsuarioPage extends StatefulWidget {
   static const String route = '/alta_usuario';
 
   @override
-  _AltaUsuarioPageState createState() => _AltaUsuarioPageState();
+  AltaUsuarioPageState createState() => AltaUsuarioPageState();
 }
 
-class _AltaUsuarioPageState extends State<AltaUsuarioPage> {
+class AltaUsuarioPageState extends State<AltaUsuarioPage> {
   final TextEditingController dniController = TextEditingController();
   final TextEditingController nombreController = TextEditingController();
   final TextEditingController direccionController = TextEditingController();
@@ -211,7 +211,7 @@ class _AltaUsuarioPageState extends State<AltaUsuarioPage> {
             if (pickedDate != null) {
               setState(() {
                 fechaNacimientoController.text =
-                    "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                    '${pickedDate.day}/${pickedDate.month}/${pickedDate.year}';
               });
             }
           },

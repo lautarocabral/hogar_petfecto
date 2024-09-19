@@ -8,10 +8,10 @@ class AltaGrupoPage extends StatefulWidget {
   static const String route = '/alta_rol';
 
   @override
-  _AltaGrupoPageState createState() => _AltaGrupoPageState();
+  AltaGrupoPageState createState() => AltaGrupoPageState();
 }
 
-class _AltaGrupoPageState extends State<AltaGrupoPage> {
+class AltaGrupoPageState extends State<AltaGrupoPage> {
   final TextEditingController rolNameController = TextEditingController();
 
   // Lista de pantallas/funcionalidades a las que se puede asignar acceso

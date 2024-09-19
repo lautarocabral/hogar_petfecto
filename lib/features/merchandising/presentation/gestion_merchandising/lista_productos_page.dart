@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hogar_petfecto/core/routes/app_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
 
@@ -26,29 +25,29 @@ class ListaProductosPage extends StatefulWidget {
   static const String route = '/lista_productos';
 
   @override
-  _ListaProductosPageState createState() => _ListaProductosPageState();
+  ListaProductosPageState createState() => ListaProductosPageState();
 }
 
-class _ListaProductosPageState extends State<ListaProductosPage> {
+class ListaProductosPageState extends State<ListaProductosPage> {
   List<Producto> productos = [
     Producto(
         id: 1,
-        descripcion: "Producto 1",
+        descripcion: 'Producto 1',
         stock: 10,
         precio: 99.99,
-        categoria: "Categoría 1"),
+        categoria: 'Categoría 1'),
     Producto(
         id: 2,
-        descripcion: "Producto 2",
+        descripcion: 'Producto 2',
         stock: 20,
         precio: 199.99,
-        categoria: "Categoría 2"),
+        categoria: 'Categoría 2'),
     Producto(
         id: 3,
-        descripcion: "Producto 3",
+        descripcion: 'Producto 3',
         stock: 15,
         precio: 299.99,
-        categoria: "Categoría 3"),
+        categoria: 'Categoría 3'),
   ];
 
   @override
@@ -142,7 +141,7 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
           content: Text(
-              '¿Estás seguro de que deseas eliminar el producto "${producto.descripcion}"?'),
+              '¿Estás seguro de que deseas eliminar el producto ${producto.descripcion}?'),
           actions: [
             TextButton(
               child: const Text('Cancelar'),
@@ -172,10 +171,10 @@ class _ListaProductosPageState extends State<ListaProductosPage> {
     // setState(() {
     //   productos.add(Producto(
     //     id: productos.length + 1,
-    //     descripcion: "Nuevo Producto",
+    //     descripcion: 'Nuevo Producto',
     //     stock: 0,
     //     precio: 0.0,
-    //     categoria: "Nueva Categoría",
+    //     categoria: 'Nueva Categoría',
     //   ));
     // });
     context.push(AltaProductoPage.route);
