@@ -54,7 +54,7 @@ class SignUpVeterinariaPageState extends State<SignUpVeterinariaPage> {
                 hintText: 'Teléfono de Contacto',
                 controller: phoneController,
                 textInputAction: TextInputAction.done,
-                textInputType: TextInputType.phone,
+                keyboardType: TextInputType.phone,
               ),
               const SizedBox(height: 24.0),
 

@@ -2,22 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/confirmacion_contrato_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascota_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/alta_mascota_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/lista_mascotas_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/common/presentation/custom_error_page.dart';
 import 'package:hogar_petfecto/features/common/presentation/custom_success_page.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/checkout_carrito_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_producto_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
-import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/alta_usuario_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_cliente_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
 
 class AppRouter {
@@ -50,6 +60,22 @@ class AppRouter {
       GoRoute(
         path: SignUpProtectoraPage.route,
         builder: (context, state) => const SignUpProtectoraPage(),
+      ),
+      GoRoute(
+        path: ListaUsuariosPage.route,
+        builder: (context, state) => const ListaUsuariosPage(),
+      ),
+      GoRoute(
+        path: AltaUsuarioPage.route,
+        builder: (context, state) => const AltaUsuarioPage(),
+      ),
+      GoRoute(
+        path: ListaGruposPage.route,
+        builder: (context, state) => const ListaGruposPage(),
+      ),
+      GoRoute(
+        path: AltaGrupoPage.route,
+        builder: (context, state) => const AltaGrupoPage(),
       ),
       GoRoute(
         path: HomePage.route,
@@ -93,10 +119,18 @@ class AppRouter {
           );
         },
       ),
-      // Publicacion
+      // Mascotas
       GoRoute(
         path: CargaMascota.route,
         builder: (context, state) => const CargaMascota(),
+      ),
+      GoRoute(
+        path: ListaMascotasPage.route,
+        builder: (context, state) => const ListaMascotasPage(),
+      ),
+      GoRoute(
+        path: AltaMascotaPage.route,
+        builder: (context, state) => const AltaMascotaPage(),
       ),
       // Merchandising
       GoRoute(
@@ -122,6 +156,14 @@ class AppRouter {
           );
         },
       ),
+      GoRoute(
+        path: ListaProductosPage.route,
+        builder: (context, state) => const ListaProductosPage(),
+      ),
+      GoRoute(
+        path: AltaProductoPage.route,
+        builder: (context, state) => const AltaProductoPage(),
+      ),
       // Veterinarias
       GoRoute(
         path: VeterinariaMapPage.route,
@@ -146,6 +188,18 @@ class AppRouter {
       GoRoute(
         path: QrScannerPage.route,
         builder: (context, state) => const QrScannerPage(),
+      ),
+      GoRoute(
+        path: VeterinariaFacilitiesEditPage.route,
+        builder: (context, state) => VeterinariaFacilitiesEditPage(
+          veterinaria: Veterinaria(
+              id: 1, instalaciones: ['Sala de espera', 'Consultorios']),
+        ),
+      ),
+
+      GoRoute(
+        path: QrCodePage.route,
+        builder: (context, state) => const QrCodePage(),
       ),
     ],
   );

@@ -26,6 +26,7 @@ dependencies:
   flutter_masked_text2: ^0.9.1
   custom_lint: ^0.6.4
   mobile_scanner: ^5.1.1
+  qr_flutter: ^4.1.0
 
 
 dev_dependencies:

@@ -3,10 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/lista_mascotas_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
-import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -50,16 +56,40 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
             ListTile(
-              title: const Text('Gestion de veterinarias'),
-              onTap: () {},
+              title: const Text('Mis instalaciones'),
+              onTap: () {
+                context.push(VeterinariaFacilitiesEditPage.route);
+              },
             ),
             ListTile(
               title: const Text('Gestion de merchandising'),
-              onTap: () {},
+              onTap: () {
+                context.push(ListaProductosPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Gestion de mascotas'),
+              onTap: () {
+                context.push(ListaMascotasPage.route);
+              },
             ),
             ListTile(
               title: const Text('Gestion de usuarios'),
-              onTap: () {},
+              onTap: () {
+                context.push(ListaUsuariosPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Gestion de grupos'),
+              onTap: () {
+                context.push(ListaGruposPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Generar mi QR'),
+              onTap: () {
+                context.push(QrCodePage.route);
+              },
             ),
           ],
         ),
@@ -78,11 +108,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                   context, 'Encontra a tu amigo \npeludo!', Icons.pets, () {
                 context.push(ListadoMascotasPage.route);
               }),
-              const SizedBox(height: 10),
-              buildBannerButton(context, 'Encontrale un hogar!', Icons.store,
-                  () {
-                context.push(CargaMascota.route);
-              }),
+              // const SizedBox(height: 10),
+              // buildBannerButton(context, 'Encontrale un hogar!', Icons.store,
+              //     () {
+              //   context.push(CargaMascota.route);
+              // }),
               const SizedBox(height: 10),
               buildBannerButton(
                   context, 'Encontra tu veterinaria!', Icons.local_hospital,
@@ -107,7 +137,6 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
-   
     );
   }
 

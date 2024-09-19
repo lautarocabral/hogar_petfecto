@@ -112,7 +112,7 @@ class SignUpAdoptanteClientePageState
                 textInputAction: TextInputAction.done,
                 prefixIcon:
                     const Icon(Icons.format_list_numbered), // Icono decorativo
-                textInputType: TextInputType.number, // Acepta solo números
+                keyboardType: TextInputType.number, // Acepta solo números
               ),
               const SizedBox(height: 24.0),
 

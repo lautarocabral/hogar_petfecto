@@ -54,7 +54,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 controller: capacityController,
                 textInputAction: TextInputAction.next,
                 prefixIcon: Icon(Icons.home), // Icono decorativo
-                textInputType: TextInputType.number, // Solo números
+                keyboardType: TextInputType.number, // Solo números
               ),
               const SizedBox(height: 16.0),
 
@@ -64,7 +64,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 controller: volunteersController,
                 textInputAction: TextInputAction.next,
                 prefixIcon: Icon(Icons.people), // Icono decorativo
-                textInputType: TextInputType.number, // Solo números
+                keyboardType: TextInputType.number, // Solo números
               ),
               const SizedBox(height: 16.0),
 
@@ -74,7 +74,7 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
                 controller: mascotasController,
                 textInputAction: TextInputAction.done,
                 prefixIcon: Icon(Icons.pets), // Icono decorativo
-                textInputType: TextInputType.number, // Solo números
+                keyboardType: TextInputType.number, // Solo números
               ),
               const SizedBox(height: 24.0),
 
