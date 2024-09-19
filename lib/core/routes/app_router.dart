@@ -16,6 +16,7 @@ import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
 
@@ -141,6 +142,10 @@ class AppRouter {
             veterinariaDescripcion: veterinariaDescripcion,
           );
         },
+      ),
+      GoRoute(
+        path: QrScannerPage.route,
+        builder: (context, state) => const QrScannerPage(),
       ),
     ],
   );

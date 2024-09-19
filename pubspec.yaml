@@ -25,6 +25,7 @@ dependencies:
   latlong2: ^0.9.1
   flutter_masked_text2: ^0.9.1
   custom_lint: ^0.6.4
+  mobile_scanner: ^5.1.1
 
 
 dev_dependencies:
@@ -43,6 +44,7 @@ flutter:
   assets:
     - assets/hogar_petfecto_logo.png
     - assets/hogar_petfecto_intro_logo.png
+    - assets/sign_up_veterinaria.png
     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see

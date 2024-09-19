@@ -6,6 +6,7 @@ import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/publicacion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -64,6 +65,8 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.only(
+            bottom: 20), // Para evitar que el FAB solape el contenido
         child: Padding(
           padding: const EdgeInsets.all(Margins.largeMargin),
           child: Column(
@@ -94,6 +97,17 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          context
+              .push(QrScannerPage.route); // Navegar a la página de escaneo QR
+        },
+        backgroundColor: Colors.blueAccent,
+        child: const Icon(Icons.qr_code_scanner, color: Colors.white),
+      ),
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+   
     );
   }
 
@@ -111,20 +125,11 @@ class _HomePageState extends ConsumerState<HomePage> {
             const Center(
               child: Image(
                 image: AssetImage('assets/hogar_petfecto_intro_logo.png'),
-                height: 100,
+                height: 200,
                 fit: BoxFit.contain,
               ),
             ),
             const SizedBox(height: 10),
-            Text(
-              '¡Bienvenido a Hogar Pet-fecto!',
-              style: GoogleFonts.lato(
-                textStyle: const TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
             const SizedBox(height: 10),
             Text(
               'Aquí podrás encontrar tu próxima mascota, gestionar tus adopciones y mucho más.',

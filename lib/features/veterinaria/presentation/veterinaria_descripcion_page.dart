@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 
 class VeterinariaDescripcionPage extends StatelessWidget {
   final String veterinariaNombre;
   final String veterinariaDescripcion;
   static const String route = '/veterinaria-descripcion-page';
-
 
   const VeterinariaDescripcionPage({
     super.key,
@@ -15,10 +15,7 @@ class VeterinariaDescripcionPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(veterinariaNombre),
-        backgroundColor: Colors.green[800],
-      ),
+      appBar: CustomAppBarWidget(title: veterinariaNombre),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),

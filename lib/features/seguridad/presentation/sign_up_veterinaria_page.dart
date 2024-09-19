@@ -20,13 +20,19 @@ class SignUpVeterinariaPageState extends State<SignUpVeterinariaPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: const CustomAppBarWidget(title: 'Veterinaria'),
+      appBar: const CustomAppBarWidget(title: 'Veterinaria'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Center(
+                child: Image.asset(
+                  'assets/sign_up_veterinaria.png',
+                  scale: 5,
+                ),
+              ),
               // Nombre de la Veterinaria
               CustomTextField(
                 hintText: 'Nombre de la Veterinaria',
