@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
@@ -55,24 +56,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
             ),
             ListTile(
-              title: const Text('Mis instalaciones'),
-              onTap: () {
-                context.push(VeterinariaFacilitiesEditPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Gestion de merchandising'),
-              onTap: () {
-                context.push(ListaProductosPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Gestion de mascotas'),
-              onTap: () {
-                context.push(ListaMascotasPage.route);
-              },
-            ),
-            ListTile(
               title: const Text('Gestion de usuarios'),
               onTap: () {
                 context.push(ListaUsuariosPage.route);
@@ -82,12 +65,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               title: const Text('Gestion de grupos'),
               onTap: () {
                 context.push(ListaGruposPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Generar mi QR'),
-              onTap: () {
-                context.push(QrCodePage.route);
               },
             ),
           ],
@@ -103,25 +80,45 @@ class _HomePageState extends ConsumerState<HomePage> {
             children: [
               buildWelcomeCard(),
               const SizedBox(height: 20),
+              // MASCOTAS
               buildBannerButton(
                   context, 'Encontra a tu amigo \npeludo!', Icons.pets, () {
                 context.push(ListadoMascotasPage.route);
               }),
-              // const SizedBox(height: 10),
-              // buildBannerButton(context, 'Encontrale un hogar!', Icons.store,
-              //     () {
-              //   context.push(CargaMascota.route);
-              // }),
-              const SizedBox(height: 10),
+              const Gap(10),
+              buildBannerButton(context, 'Gestion de mascotas', Icons.info, () {
+                context.push(ListaMascotasPage.route);
+              }),
+              const Gap(10),
+              // MERCHANDISING
+              buildBannerButton(context, 'Merchandising', Icons.shopping_bag,
+                  () {
+                context.push(ListadoProductos.route);
+              }),
+              const Gap(10),
+              buildBannerButton(
+                  context, 'Gestion de \nMerchandising', Icons.shopping_cart,
+                  () {
+                context.push(ListaProductosPage.route);
+              }),
+              const Gap(10),
+
+              // VETERINARIA
               buildBannerButton(
                   context, 'Encontra tu veterinaria!', Icons.local_hospital,
                   () {
                 context.push(VeterinariaMapPage.route);
               }),
-              const SizedBox(height: 10),
-              buildBannerButton(context, 'Merchandising', Icons.info, () {
-                context.push(ListadoProductos.route);
+              const Gap(10),
+              buildBannerButton(
+                  context, 'Mis instalaciones', Icons.medical_services, () {
+                context.push(VeterinariaFacilitiesEditPage.route);
               }),
+              const Gap(10),
+              buildBannerButton(context, 'Generar QR', Icons.qr_code, () {
+                context.push(QrCodePage.route);
+              }),
+              const Gap(10),
             ],
           ),
         ),
@@ -153,11 +150,10 @@ class _HomePageState extends ConsumerState<HomePage> {
             const Center(
               child: Image(
                 image: AssetImage('assets/hogar_petfecto_intro_logo.png'),
-                height: 200,
+                height: 150,
                 fit: BoxFit.contain,
               ),
             ),
-            const SizedBox(height: 10),
             const SizedBox(height: 10),
             Text(
               'Aquí podrás encontrar tu próxima mascota, gestionar tus adopciones y mucho más.',

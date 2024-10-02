@@ -4,11 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
+import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
-import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:permission_handler/permission_handler.dart'; // Importa tu GenericState
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -101,9 +101,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             children: [
               Image.asset(
                 'assets/hogar_petfecto_logo.png',
-                scale: 5,
+                scale: 0.5,
               ),
-              const Gap(20),
+              const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
