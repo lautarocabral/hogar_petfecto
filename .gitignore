@@ -77,3 +77,7 @@ app.*.map.json
 
 # Firebase related
 firebase_app_id_file.json
+# Generated files related to Flutter plugins (macOS, Windows, etc.)
+macos/Flutter/GeneratedPluginRegistrant.swift
+windows/flutter/generated_plugin_registrant.cc
+windows/flutter/generated_plugins.cmake
