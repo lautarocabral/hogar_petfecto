@@ -39,64 +39,48 @@ class SignUpProtectoraPageState extends State<SignUpProtectoraPage> {
               // ),
               const SizedBox(height: 16.0),
 
-              // Dirección
-              CustomTextField(
-                hintText: 'Dirección de la Protectora',
-                controller: addressController,
-                textInputAction: TextInputAction.next,
-                prefixIcon: const Icon(Icons.location_on), // Icono decorativo
-              ),
-              const SizedBox(height: 16.0),
+              // // Dirección
+              // CustomTextField(
+              //   hintText: 'Dirección de la Protectora',
+              //   controller: addressController,
+              //   textInputAction: TextInputAction.next,
+              //   prefixIcon: const Icon(Icons.location_on), // Icono decorativo
+              // ),
+              // const SizedBox(height: 16.0),
 
-              // Capacidad de la Protectora
               CustomTextField(
                 hintText: 'Capacidad de la Protectora (cantidad de mascotas)',
                 controller: capacityController,
                 textInputAction: TextInputAction.next,
-                prefixIcon: const Icon(Icons.home), // Icono decorativo
-                keyboardType: TextInputType.number, // Solo números
+                prefixIcon: const Icon(Icons.home),
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 16.0),
 
-              // Número de Voluntarios
               CustomTextField(
                 hintText: 'Número de Voluntarios',
                 controller: volunteersController,
                 textInputAction: TextInputAction.next,
-                prefixIcon: const Icon(Icons.people), // Icono decorativo
-                keyboardType: TextInputType.number, // Solo números
+                prefixIcon: const Icon(Icons.people),
+                keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 16.0),
-
-              // Cantidad de Mascotas bajo Cuidado
-              CustomTextField(
-                hintText: 'Cantidad de Mascotas bajo Cuidado',
-                controller: mascotasController,
-                textInputAction: TextInputAction.done,
-                prefixIcon: const Icon(Icons.pets), // Icono decorativo
-                keyboardType: TextInputType.number, // Solo números
-              ),
+              
               const SizedBox(height: 24.0),
 
-              // Botón Continuar con ícono
               Center(
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Acción de continuar
                     context.go(HomePage.route);
                   },
-                  icon: const Icon(Icons.arrow_forward), // Icono decorativo
+                  icon: const Icon(Icons.arrow_forward),
                   label: const Text(
-                    'Continuar',
+                    'Registrarme',
                     style: TextStyle(fontSize: 18),
                   ),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor:
-                        Colors.blueAccent, // Cambia el color del botón
-                    backgroundColor:
-                        Colors.white, // Cambia el color del texto/ícono
-                    minimumSize: const Size(
-                        double.infinity, 50), // Botón de ancho completo
+                    foregroundColor: Colors.blueAccent,
+                    backgroundColor: Colors.white,
+                    minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

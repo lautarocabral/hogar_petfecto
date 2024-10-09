@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
-import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_cliente_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
-
-enum UserType { Cliente, Veterinaria, Protectora }
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -27,7 +25,6 @@ class SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController confirmPasswordController =
       TextEditingController();
 
-  UserType selectedUserType = UserType.Cliente;
   String selectedProvince = 'Provincia 1';
   String selectedCity = 'Localidad 1';
 
@@ -72,7 +69,8 @@ class SignUpScreenState extends State<SignUpScreen> {
                 hintText: 'Nombre o Razón Social',
                 controller: nameController,
                 textInputAction: TextInputAction.next,
-                prefixIcon: const Icon(Icons.account_circle), // Icono decorativo
+                prefixIcon:
+                    const Icon(Icons.account_circle), // Icono decorativo
               ),
               const SizedBox(height: 16.0),
 
@@ -120,32 +118,6 @@ class SignUpScreenState extends State<SignUpScreen> {
                 controller: confirmPasswordController,
                 textInputAction: TextInputAction.done,
                 prefixIcon: const Icon(Icons.lock_outline), // Icono decorativo
-              ),
-              const SizedBox(height: 24.0),
-
-              // Tipo de Usuario
-              const Text('Tipo de Usuario',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 8.0),
-              DropdownButtonFormField<UserType>(
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                value: selectedUserType,
-                items: UserType.values.map((UserType type) {
-                  return DropdownMenuItem<UserType>(
-                    value: type,
-                    child: Text(type.toString().split('.').last),
-                  );
-                }).toList(),
-                onChanged: (UserType? value) {
-                  setState(() {
-                    selectedUserType = value!;
-                  });
-                },
               ),
               const SizedBox(height: 24.0),
 
@@ -214,23 +186,19 @@ class SignUpScreenState extends State<SignUpScreen> {
                         ),
                       );
                     } else {
-                      if (selectedUserType == UserType.Veterinaria) {
-                        context.push(SignUpVeterinariaPage.route);
-                      } else if (selectedUserType == UserType.Cliente) {
-                        context.push(SignUpAdoptanteClientePage.route);
-                      } else if (selectedUserType == UserType.Protectora) {
-                        context.push(SignUpProtectoraPage.route);
-                      }
+                      context.go('/home');
                     }
                   },
                   icon: const Icon(Icons.arrow_forward), // Icono decorativo
                   label: const Text(
-                    'Continuar',
+                    'Ingresar',
                     style: TextStyle(fontSize: 18),
                   ),
                   style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.blueAccent, // Cambia el color del botón
-                    backgroundColor: Colors.white, // Cambia el color del texto/ícono
+                    foregroundColor:
+                        Colors.blueAccent, // Cambia el color del botón
+                    backgroundColor:
+                        Colors.white, // Cambia el color del texto/ícono
                     minimumSize: const Size(
                         double.infinity, 50), // Botón de ancho completo
                     shape: RoundedRectangleBorder(

@@ -5,11 +5,20 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/lista_mascotas_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_adoptante_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_protectora_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historia_ventas_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_client_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
@@ -65,6 +74,64 @@ class _HomePageState extends ConsumerState<HomePage> {
               title: const Text('Gestion de grupos'),
               onTap: () {
                 context.push(ListaGruposPage.route);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.lock_outline),
+              title: const Text('Soy Adoptante!'),
+              onTap: () {
+                context.push(SignUpAdoptantePage.route);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.lock_outline),
+              title: const Text('Soy Protectora!'),
+              onTap: () {
+                context.push(SignUpProtectoraPage.route);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.lock_outline),
+              title: const Text('Quiero Merchandising!'),
+              onTap: () {
+                context.push(SignUpClientPage.route);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.lock_outline),
+              title: const Text('Quiero Publicar mi veterinaria!'),
+              onTap: () {
+                context.push(SignUpVeterinariaPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Mis postulaciones'),
+              onTap: () {
+                context.push(GestionPostulacionesAdoptantePage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Seleccionar adoptantes'),
+              onTap: () {
+                context.push(GestionPostulacionesProtectoraPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Mis Compras'),
+              onTap: () {
+                context.push(HistorialComprasPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Mis Ventas'),
+              onTap: () {
+                context.push(HistorialVentasPage.route);
+              },
+            ),
+            ListTile(
+              title: const Text('Mi Suscripcion'),
+              onTap: () {
+                context.push(GestionSuscripcionesPage.route);
               },
             ),
           ],
