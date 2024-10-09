@@ -4,6 +4,9 @@ import 'package:hogar_petfecto/features/adopcion/presentation/confirmacion_contr
 import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascota_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/alta_mascota_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/lista_mascotas_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/detalles_postulante_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_adoptante_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_protectora_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/common/presentation/custom_error_page.dart';
 import 'package:hogar_petfecto/features/common/presentation/custom_success_page.dart';
@@ -12,6 +15,8 @@ import 'package:hogar_petfecto/features/merchandising/presentation/checkout_carr
 import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historia_ventas_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
@@ -19,11 +24,13 @@ import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/li
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/alta_usuario_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
-import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_cliente_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_client_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
@@ -54,12 +61,16 @@ class AppRouter {
         builder: (context, state) => const SubscriptionPage(),
       ),
       GoRoute(
-        path: SignUpAdoptanteClientePage.route,
-        builder: (context, state) => const SignUpAdoptanteClientePage(),
+        path: SignUpAdoptantePage.route,
+        builder: (context, state) => const SignUpAdoptantePage(),
       ),
       GoRoute(
         path: SignUpProtectoraPage.route,
         builder: (context, state) => const SignUpProtectoraPage(),
+      ),
+      GoRoute(
+        path: SignUpClientPage.route,
+        builder: (context, state) => const SignUpClientPage(),
       ),
       GoRoute(
         path: ListaUsuariosPage.route,
@@ -132,6 +143,26 @@ class AppRouter {
         path: AltaMascotaPage.route,
         builder: (context, state) => const AltaMascotaPage(),
       ),
+      GoRoute(
+        path: GestionPostulacionesAdoptantePage.route,
+        builder: (context, state) => const GestionPostulacionesAdoptantePage(),
+      ),
+      GoRoute(
+        path: GestionPostulacionesProtectoraPage.route,
+        builder: (context, state) => const GestionPostulacionesProtectoraPage(),
+      ),
+      GoRoute(
+        path: DetallesPostulantePage.route,
+        builder: (context, state) {
+          final args = state.extra as Map<String, dynamic>?;
+          final adoptante = args!['adoptante'] as String;
+          final detalles = args!['detalles'] as String;
+          return DetallesPostulantePage(
+            adoptante: adoptante,
+            detalles: detalles,
+          );
+        },
+      ),
       // Merchandising
       GoRoute(
         path: ListadoProductos.route,
@@ -163,6 +194,14 @@ class AppRouter {
       GoRoute(
         path: AltaProductoPage.route,
         builder: (context, state) => const AltaProductoPage(),
+      ),
+      GoRoute(
+        path: HistorialComprasPage.route,
+        builder: (context, state) => const HistorialComprasPage(),
+      ),
+      GoRoute(
+        path: HistorialVentasPage.route,
+        builder: (context, state) => const HistorialVentasPage(),
       ),
       // Veterinarias
       GoRoute(
@@ -196,10 +235,13 @@ class AppRouter {
               id: 1, instalaciones: ['Sala de espera', 'Consultorios']),
         ),
       ),
-
       GoRoute(
         path: QrCodePage.route,
         builder: (context, state) => const QrCodePage(),
+      ),
+      GoRoute(
+        path: GestionSuscripcionesPage.route,
+        builder: (context, state) => const GestionSuscripcionesPage(),
       ),
     ],
   );
