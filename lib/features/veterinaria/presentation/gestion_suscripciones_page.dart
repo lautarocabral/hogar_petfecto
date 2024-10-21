@@ -14,8 +14,10 @@ class GestionSuscripcionesPage extends StatefulWidget {
 }
 
 class GestionSuscripcionesPageState extends State<GestionSuscripcionesPage> {
-  SubscriptionPlan selectedPlan = SubscriptionPlan.Mensual; // Simulación del plan actual
-  bool isSubscribed = true; // Estado de si el cliente tiene una suscripción activa o no
+  SubscriptionPlan selectedPlan =
+      SubscriptionPlan.Mensual; // Simulación del plan actual
+  bool isSubscribed =
+      true; // Estado de si el cliente tiene una suscripción activa o no
 
   @override
   Widget build(BuildContext context) {
