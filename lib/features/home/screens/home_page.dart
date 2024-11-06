@@ -18,6 +18,7 @@ import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_client_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
@@ -35,7 +36,15 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+    BuildContext context,
+  ) {
+    final user = ref.watch(userStateNotifierProvider);
+    print('User in home: $user');
+
+    if (user == null) {
+      return Center(child: CircularProgressIndicator());
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -64,76 +73,98 @@ class _HomePageState extends ConsumerState<HomePage> {
                 foregroundImage: AssetImage('assets/hogar_petfecto_logo.png'),
               ),
             ),
-            ListTile(
-              title: const Text('Gestion de usuarios'),
-              onTap: () {
-                context.push(ListaUsuariosPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Gestion de grupos'),
-              onTap: () {
-                context.push(ListaGruposPage.route);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.lock_outline),
-              title: const Text('Soy Adoptante!'),
-              onTap: () {
-                context.push(SignUpAdoptantePage.route);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.lock_outline),
-              title: const Text('Soy Protectora!'),
-              onTap: () {
-                context.push(SignUpProtectoraPage.route);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.lock_outline),
-              title: const Text('Quiero Merchandising!'),
-              onTap: () {
-                context.push(SignUpClientPage.route);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.lock_outline),
-              title: const Text('Quiero Publicar mi veterinaria!'),
-              onTap: () {
-                context.push(SignUpVeterinariaPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Mis postulaciones'),
-              onTap: () {
-                context.push(GestionPostulacionesAdoptantePage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Seleccionar adoptantes'),
-              onTap: () {
-                context.push(GestionPostulacionesProtectoraPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Mis Compras'),
-              onTap: () {
-                context.push(HistorialComprasPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Mis Ventas'),
-              onTap: () {
-                context.push(HistorialVentasPage.route);
-              },
-            ),
-            ListTile(
-              title: const Text('Mi Suscripcion'),
-              onTap: () {
-                context.push(GestionSuscripcionesPage.route);
-              },
-            ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 9)))
+              ListTile(
+                title: const Text('Gestion de usuarios'),
+                onTap: () {
+                  context.push(ListaUsuariosPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 9)))
+              ListTile(
+                title: const Text('Gestion de grupos'),
+                onTap: () {
+                  context.push(ListaGruposPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 5)))
+              ListTile(
+                leading: Icon(Icons.lock_outline),
+                title: const Text('Soy Adoptante!'),
+                onTap: () {
+                  context.push(SignUpAdoptantePage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 8)))
+              ListTile(
+                leading: Icon(Icons.lock_outline),
+                title: const Text('Soy Protectora!'),
+                onTap: () {
+                  context.push(SignUpProtectoraPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 6)))
+              ListTile(
+                leading: Icon(Icons.lock_outline),
+                title: const Text('Quiero Merchandising!'),
+                onTap: () {
+                  context.push(SignUpClientPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 7)))
+              ListTile(
+                leading: Icon(Icons.lock_outline),
+                title: const Text('Quiero Publicar mi veterinaria!'),
+                onTap: () {
+                  context.push(SignUpVeterinariaPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 1)))
+              ListTile(
+                title: const Text('Mis postulaciones'),
+                onTap: () {
+                  context.push(GestionPostulacionesAdoptantePage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 4)))
+              ListTile(
+                title: const Text('Seleccionar adoptantes'),
+                onTap: () {
+                  context.push(GestionPostulacionesProtectoraPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 2)))
+              ListTile(
+                title: const Text('Mis Compras'),
+                onTap: () {
+                  context.push(HistorialComprasPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 4)))
+              ListTile(
+                title: const Text('Mis Ventas'),
+                onTap: () {
+                  context.push(HistorialVentasPage.route);
+                },
+              ),
+            if (user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
+              ListTile(
+                title: const Text('Mi Suscripcion'),
+                onTap: () {
+                  context.push(GestionSuscripcionesPage.route);
+                },
+              ),
           ],
         ),
       ),
@@ -151,23 +182,31 @@ class _HomePageState extends ConsumerState<HomePage> {
               buildBannerButton(
                   context, 'Encontra a tu amigo \npeludo!', Icons.pets, () {
                 context.push(ListadoMascotasPage.route);
-              }),
+              },
+                  isEnabled: user!.grupos.any((grupo) =>
+                      grupo.permisos.any((permiso) => permiso.id == 1))),
               const Gap(10),
               buildBannerButton(context, 'Gestion de mascotas', Icons.info, () {
                 context.push(ListaMascotasPage.route);
-              }),
+              },
+                  isEnabled: user!.grupos.any((grupo) =>
+                      grupo.permisos.any((permiso) => permiso.id == 4))),
               const Gap(10),
               // MERCHANDISING
               buildBannerButton(context, 'Merchandising', Icons.shopping_bag,
                   () {
                 context.push(ListadoProductos.route);
-              }),
+              },
+                  isEnabled: user!.grupos.any((grupo) =>
+                      grupo.permisos.any((permiso) => permiso.id == 2))),
               const Gap(10),
               buildBannerButton(
                   context, 'Gestion de \nMerchandising', Icons.shopping_cart,
                   () {
                 context.push(ListaProductosPage.route);
-              }),
+              },
+                  isEnabled: user!.grupos.any((grupo) =>
+                      grupo.permisos.any((permiso) => permiso.id == 4))),
               const Gap(10),
 
               // VETERINARIA
@@ -175,12 +214,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                   context, 'Encontra tu veterinaria!', Icons.local_hospital,
                   () {
                 context.push(VeterinariaMapPage.route);
-              }),
+              },
+                  isEnabled: user!.grupos.any((grupo) =>
+                      grupo.permisos.any((permiso) => permiso.id == 3))),
               const Gap(10),
               buildBannerButton(
                   context, 'Mis instalaciones', Icons.medical_services, () {
                 context.push(VeterinariaFacilitiesEditPage.route);
-              }),
+              },
+                  isEnabled: user!.grupos.any((grupo) =>
+                      grupo.permisos.any((permiso) => permiso.id == 3))),
               const Gap(10),
               buildBannerButton(context, 'Generar QR', Icons.qr_code, () {
                 context.push(QrCodePage.route);
@@ -190,14 +233,15 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: user!.grupos.any(
+                (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)) == true?FloatingActionButton(
         onPressed: () {
           context
               .push(QrScannerPage.route); // Navegar a la página de escaneo QR
         },
         backgroundColor: Colors.blueAccent,
         child: const Icon(Icons.qr_code_scanner, color: Colors.white),
-      ),
+      ) :  null ,
       floatingActionButtonLocation:
           FloatingActionButtonLocation.miniCenterDocked,
     );
@@ -237,26 +281,41 @@ class _HomePageState extends ConsumerState<HomePage> {
   }
 
   GestureDetector buildBannerButton(
-      BuildContext context, String title, IconData icon, VoidCallback onTap) {
+    BuildContext context,
+    String title,
+    IconData icon,
+    VoidCallback onTap, {
+    bool isEnabled = true,
+  }) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isEnabled
+          ? onTap
+          : null, // Solo llama a onTap si el botón está habilitado
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 20.0),
         decoration: BoxDecoration(
-          color: Colors.blueAccent,
+          color: isEnabled
+              ? Colors.blueAccent
+              : Colors.grey, // Cambia el color según el estado
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Row(
           children: [
             const SizedBox(width: 16.0),
-            Icon(icon, color: Colors.white, size: 32.0),
+            Icon(
+              icon,
+              color: Colors.white.withOpacity(
+                  isEnabled ? 1.0 : 0.5), // Cambia la opacidad del icono
+              size: 32.0,
+            ),
             const SizedBox(width: 16.0),
             Text(
               title,
               style: GoogleFonts.lato(
-                textStyle: const TextStyle(
+                textStyle: TextStyle(
                   fontSize: 18.0,
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(
+                      isEnabled ? 1.0 : 0.5), // Cambia la opacidad del texto
                 ),
               ),
             ),

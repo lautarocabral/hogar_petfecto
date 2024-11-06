@@ -1,14 +1,16 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
-import 'package:hogar_petfecto/core/state/generic_state.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
+import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
-import 'package:hogar_petfecto/features/seguridad/providers/seguridad_providers.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/auth_provider.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 import 'package:permission_handler/permission_handler.dart'; // Importa tu GenericState
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -69,28 +71,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(seguridadNotifierProvider);
-
     return Scaffold(
-      body: _buildState(state),
+      body: _buildLoginForm(),
     );
   }
 
-  Widget _buildState(GenericState state) {
-    if (state is LoadingState) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (state is SuccessState) {
-      // Redirige al home en caso de éxito
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.go('/home');
-      });
-      return const SizedBox.shrink();
-    } else {
-      return _buildLoginForm(state);
-    }
-  }
-
-  Widget _buildLoginForm(GenericState state) {
+  Widget _buildLoginForm() {
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(Margins.largeMargin),
@@ -151,26 +137,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               CustomButton(
                 text: 'Login',
                 onPressed: () async {
-                  // if (_formKey.currentState?.validate() ?? false) {
-                  //   await ref
-                  //       .read(seguridadNotifierProvider.notifier)
-                  //       .loginUser(
-                  //         _emailController.text,
-                  //         _passwordController.text,
-                  //       );
-                  // }
-                  context.go('/home');
+                  if (_formKey.currentState?.validate() ?? false) {
+                    final credentials = {
+                      'email': _emailController.text,
+                      'password': _passwordController.text,
+                    };
+
+                    try {
+                      await ref.read(loginProvider(credentials).future);
+                      if (mounted) {
+                        context.pushReplacement('/home');
+                      }
+                    } on DioException catch (e) {
+                      final errorMessage = e.error.toString();
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(errorMessage)),
+                      );
+                    }
+                  }
                 },
               ),
-              if (state is ErrorState)
-                Text(
-                  state.message,
-                  style: const TextStyle(
-                    color: Colors.red,
-                    fontSize: 14,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
             ],
           ),
         ),

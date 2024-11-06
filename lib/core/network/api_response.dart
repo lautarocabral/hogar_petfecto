@@ -1,24 +1,16 @@
 class ApiResponse<T> {
-  final bool success;
-  final T? data;
-  final String? message;
+  final int statusCode;
+  final String message;
+  final T result;
 
-  ApiResponse({required this.success, this.data, this.message});
+  ApiResponse({required this.statusCode, required this.message, required this.result});
 
-  factory ApiResponse.fromJson(
-      Map<String, dynamic> json, T Function(Map<String, dynamic>) fromJsonT) {
+  // Método factory para mapear JSON a la clase ApiResponse
+  factory ApiResponse.fromJson(Map<String, dynamic> json, T Function(Map<String, dynamic>) create) {
     return ApiResponse(
-      success: json['success'],
-      data: json['data'] != null ? fromJsonT(json['data']) : null,
+      statusCode: json['statusCode'],
       message: json['message'],
+      result: create(json['result']),
     );
-  }
-
-  Map<String, dynamic> toJson(Map<String, dynamic> Function(T?) toJsonT) {
-    return {
-      'success': success,
-      'data': data != null ? toJsonT(data) : null,
-      'message': message,
-    };
   }
 }
