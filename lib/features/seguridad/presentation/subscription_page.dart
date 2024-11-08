@@ -1,38 +1,151 @@
+import 'dart:async';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_custom_tabs/flutter_custom_tabs.dart';
 import 'package:flutter_masked_text2/flutter_masked_text2.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
-import 'package:hogar_petfecto/features/home/screens/home_page.dart'; // Importa el paquete
+import 'package:hogar_petfecto/features/home/screens/home_page.dart';
+import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/perfil_provider.dart';
 
 enum SubscriptionPlan { Mensual, Anual }
 
-class SubscriptionPage extends StatefulWidget {
-  const SubscriptionPage({super.key});
-
+class SubscriptionPage extends ConsumerStatefulWidget {
+  const SubscriptionPage({super.key, this.veterinariaModel});
+  final VeterinariaModel? veterinariaModel;
   static const String route = '/subscription_page';
 
   @override
-  SubscriptionPageState createState() => SubscriptionPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SubscriptionPageState();
 }
 
-class SubscriptionPageState extends State<SubscriptionPage> {
+class _SubscriptionPageState extends ConsumerState<SubscriptionPage> {
   SubscriptionPlan selectedPlan = SubscriptionPlan.Mensual;
 
   final TextEditingController cardNumberController = TextEditingController();
   final MaskedTextController expiryDateController =
-      MaskedTextController(mask: '00/00'); // Usa MaskedTextController
+      MaskedTextController(mask: '00/00');
   final TextEditingController cvvController = TextEditingController();
   final TextEditingController cardHolderNameController =
       TextEditingController();
 
   @override
   void dispose() {
-    // Limpiar los controladores cuando no se necesiten más
     cardNumberController.dispose();
     expiryDateController.dispose();
     cvvController.dispose();
     cardHolderNameController.dispose();
     super.dispose();
+  }
+
+  Future<void> registrarVeterinaria(context) async {
+    try {
+      // Determina el monto en función del plan seleccionado
+      double monto = selectedPlan == SubscriptionPlan.Anual ? 200 : 20;
+
+      // Fecha de inicio en el momento actual
+      DateTime fechaInicio = DateTime.now();
+
+      // Calcula la fecha de fin en función del plan
+      DateTime fechaFin = selectedPlan == SubscriptionPlan.Anual
+          ? fechaInicio.add(Duration(days: 365)) // Plan anual: +1 año
+          : fechaInicio
+              .add(Duration(days: 30)); // Plan mensual: +1 mes (aprox.)
+
+      // Añade la suscripción a la lista en el modelo
+      widget.veterinariaModel!.suscripciones.add(Suscripcion(
+        id: widget.veterinariaModel!.suscripciones.length + 1,
+        fechaInicio: fechaInicio.toUtc(),
+        fechaFin: fechaFin.toUtc(),
+        monto: monto,
+        estado: true,
+      ));
+
+      var credentials = widget.veterinariaModel!.toMap();
+
+      // Llama a la función para registrar la protectora
+      await ref.read(veterinariaProvider(credentials).future);
+
+      // Notificación de éxito
+      await ScaffoldMessenger.of(context)
+          .showSnackBar(
+            const SnackBar(
+              content: Text('Veterinaria registrada con éxito'),
+              duration: Duration(seconds: 1),
+            ),
+          )
+          .closed;
+
+      // Regresa a la pantalla anterior
+      GoRouter.of(context).go(HomePage.route);
+    } on DioException catch (e) {
+      // Use ApiClient's handleError to display the error for non-401 errors
+      ref.read(apiClientProvider).handleError(context, e);
+    }
+  }
+
+  Future<void> _launchUrlAndConfirm(
+      BuildContext context, SubscriptionPlan plan) async {
+    final theme = Theme.of(context);
+    String link = plan == SubscriptionPlan.Anual
+        ? 'https://mpago.la/11VsDMS'
+        : 'https://mpago.la/2zJ3GfM';
+
+    try {
+      await launchUrl(
+        Uri.parse(link),
+        customTabsOptions: CustomTabsOptions(
+          colorSchemes: CustomTabsColorSchemes.defaults(
+            toolbarColor: theme.colorScheme.surface,
+            navigationBarColor: theme.colorScheme.surface,
+          ),
+          shareState: CustomTabsShareState.on,
+          urlBarHidingEnabled: true,
+          showTitle: true,
+        ),
+        safariVCOptions: SafariViewControllerOptions(
+          preferredBarTintColor: theme.colorScheme.surface,
+          preferredControlTintColor: theme.colorScheme.onSurface,
+          barCollapsingEnabled: true,
+          entersReaderIfAvailable: false,
+        ),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    // Espera 3 segundos antes de mostrar el diálogo de confirmación
+    await Future.delayed(Duration(seconds: 3));
+    await _showConfirmationDialog(context);
+  }
+
+  Future<void> _showConfirmationDialog(BuildContext context) async {
+    final result = await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Confirmación de Pago'),
+        content: Text('¿Finalizaste el pago?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: Text('Sí'),
+          ),
+        ],
+      ),
+    );
+
+    if (result == true) {
+      await registrarVeterinaria(context);
+    }
   }
 
   @override
@@ -45,7 +158,6 @@ class SubscriptionPageState extends State<SubscriptionPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Selección de plan
               const Text(
                 'Seleccione un plan de suscripción',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -76,99 +188,14 @@ class SubscriptionPageState extends State<SubscriptionPage> {
                 ),
               ),
               const SizedBox(height: 24.0),
-
-              // Información de la tarjeta de crédito
-              const Text(
-                'Información de la Tarjeta de Crédito',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16.0),
-
-              // Número de tarjeta de crédito
-              Row(
-                children: [
-                  const Icon(Icons.credit_card, size: 30.0, color: Colors.blue),
-                  const SizedBox(width: 10.0),
-                  Expanded(
-                    child: TextField(
-                      controller: cardNumberController,
-                      keyboardType: TextInputType.number,
-                      maxLength: 16,
-                      decoration: InputDecoration(
-                        hintText: 'Número de Tarjeta',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        counterText: '',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-
-              // Fecha de expiración y CVV
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: expiryDateController,
-                      keyboardType: TextInputType.number,
-                      decoration: InputDecoration(
-                        hintText: 'MM/AA',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        counterText: '',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 16.0),
-                  Expanded(
-                    child: TextField(
-                      controller: cvvController,
-                      keyboardType: TextInputType.number,
-                      maxLength: 3,
-                      decoration: InputDecoration(
-                        hintText: 'CVV',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10.0),
-                        ),
-                        counterText: '',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16.0),
-
-              // Nombre del titular de la tarjeta
-              TextField(
-                controller: cardHolderNameController,
-                decoration: InputDecoration(
-                  hintText: 'Nombre del Titular',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24.0),
-
-              // Botón de Confirmación de Suscripción
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    // Simular el proceso de suscripción
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('Suscripción realizada con éxito')),
-                    );
-                    // Navegar a otra pantalla o finalizar el flujo
-                    context.go(HomePage.route);
+                  onPressed: () async {
+                    // await _launchUrl(context, selectedPlan);
+                    await _launchUrlAndConfirm(context, selectedPlan);
                   },
                   style: ElevatedButton.styleFrom(
-                    minimumSize:
-                        const Size(double.infinity, 50), // Botón ancho completo
+                    minimumSize: const Size(double.infinity, 50),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),

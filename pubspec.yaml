@@ -27,7 +27,8 @@ dependencies:
   custom_lint: ^0.6.4
   mobile_scanner: ^5.1.1
   qr_flutter: ^4.1.0
-
+  flutter_custom_tabs: ^2.1.0
+  http: ^1.2.2
 
 dev_dependencies:
   flutter_test:

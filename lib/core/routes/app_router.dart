@@ -19,6 +19,7 @@ import 'package:hogar_petfecto/features/merchandising/presentation/historial_mer
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/alta_usuario_page.dart';
@@ -36,9 +37,11 @@ import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
   final GoRouter router = GoRouter(
+    navigatorKey: navigatorKey,
     // initialLocation: lastVisitedRoute ??
     //     HomePage
     //         .route, // Restaurar la última ruta o usar una ruta predeterminada
@@ -49,8 +52,8 @@ class AppRouter {
         builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
-        path: SignUpScreen.route,
-        builder: (context, state) => const SignUpScreen(),
+        path: SignUpPage.route,
+        builder: (context, state) => const SignUpPage(),
       ),
       GoRoute(
         path: SignUpVeterinariaPage.route,
@@ -58,7 +61,14 @@ class AppRouter {
       ),
       GoRoute(
         path: SubscriptionPage.route,
-        builder: (context, state) => const SubscriptionPage(),
+        builder: (context, state) {
+          // Obtén el argumento desde `state.extra`
+          final veterinariaModel = state.extra as VeterinariaModel?;
+
+          return SubscriptionPage(
+            veterinariaModel: veterinariaModel,
+          );
+        },
       ),
       GoRoute(
         path: SignUpAdoptantePage.route,

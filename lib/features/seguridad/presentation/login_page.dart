@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
+import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
@@ -122,7 +123,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
-                  context.push(SignUpScreen.route);
+                  context.push(SignUpPage.route);
                 },
                 child: const Text(
                   'Sign Up',
@@ -149,10 +150,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                         context.pushReplacement('/home');
                       }
                     } on DioException catch (e) {
-                      final errorMessage = e.error.toString();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(errorMessage)),
-                      );
+                      // Display the error message for non-401 errors
+                      ref.read(apiClientProvider).handleError(context, e);
                     }
                   }
                 },

@@ -6,7 +6,13 @@ class UserStateNotifier extends StateNotifier<UsuarioResponseDto> {
 
   void setUser(UsuarioResponseDto usuario) {
     print('Setting user: ${usuario.email}');
+    resetUser();
     state = usuario;
+  }
+
+  void resetUser() {
+    print('Resetting user state to empty');
+    state = UsuarioResponseDto.empty();
   }
 }
 
