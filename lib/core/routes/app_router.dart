@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/features/adopcion/models/mascotas_for_protectoras_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/confirmacion_contrato_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascota_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/alta_mascota_page.dart';
+import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/edit_mascota_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/lista_mascotas_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/detalles_postulante_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_adoptante_page.dart';
@@ -37,6 +39,7 @@ import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
+
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class AppRouter {
@@ -141,10 +144,10 @@ class AppRouter {
         },
       ),
       // Mascotas
-      GoRoute(
-        path: CargaMascota.route,
-        builder: (context, state) => const CargaMascota(),
-      ),
+      // GoRoute(
+      //   path: CargaMascota.route,
+      //   builder: (context, state) => const CargaMascota(),
+      // ),
       GoRoute(
         path: ListaMascotasPage.route,
         builder: (context, state) => const ListaMascotasPage(),
@@ -153,6 +156,15 @@ class AppRouter {
         path: AltaMascotaPage.route,
         builder: (context, state) => const AltaMascotaPage(),
       ),
+      GoRoute(
+        path: EditarMascotaPage.route,
+        builder: (context, state) {
+          final mascota =
+              state.extra as MascotasDto; // Retrieve the passed Mascota object
+          return EditarMascotaPage(mascota: mascota);
+        },
+      ),
+
       GoRoute(
         path: GestionPostulacionesAdoptantePage.route,
         builder: (context, state) => const GestionPostulacionesAdoptantePage(),

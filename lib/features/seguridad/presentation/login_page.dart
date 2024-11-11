@@ -8,10 +8,8 @@ import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
-import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/auth_provider.dart';
-import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 import 'package:permission_handler/permission_handler.dart'; // Importa tu GenericState
 
 class LoginPage extends ConsumerStatefulWidget {
