@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hogar_petfecto/core/network/api_response.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
+import 'package:hogar_petfecto/features/adopcion/models/get_all_mascotas_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/models/mascotas_for_protectoras_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/models/tipo_mascota_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
@@ -103,4 +104,23 @@ final editarMascotaUseCaseProvider =
   ref
       .read(userStateNotifierProvider.notifier)
       .setUser(apiResponse.result.usuario);
+});
+
+// Provider para obtener los tipos de mascotas
+final getAllMascotasUseCase = FutureProvider.autoDispose<GetAllMascotasResponseModel>((ref) async {
+  final apiClient = ref.read(apiClientProvider);
+  final response = await apiClient.getData('mascotas/GetAllMascotas');
+
+  final apiResponse = ApiResponse.fromJson(
+    response.data,
+    (result) => GetAllMascotasResponseModel.fromJson(result),
+  );
+
+  if (apiResponse.statusCode != 200) {
+    throw Exception(apiResponse.message);
+  }
+
+  apiClient.setToken(apiResponse.result.token!);
+
+  return apiResponse.result;
 });

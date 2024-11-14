@@ -121,7 +121,7 @@ class _ListaMascotasPageState extends ConsumerState<ListaMascotasPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  'Tipo: ${mascota.tipoMascota ?? 'Desconocido'}'),
+                                  'Tipo: ${mascota.tipoMascota!.tipo ?? 'Desconocido'}'),
                               Text(
                                   'Peso: ${mascota.peso?.toStringAsFixed(1) ?? 'N/A'} kg'),
                               Text('Sexo: ${mascota.sexo ?? 'N/A'}'),

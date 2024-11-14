@@ -52,8 +52,8 @@ class ApiClient {
         // Verificar si la respuesta contiene un error de autenticación
         if (response.data is Map<String, dynamic> &&
             response.data['statusCode'] == 400) {
-          print('Error 401: Unauthorized - Token may be expired');
-          _token = null; // Limpiar el token
+          // print('Error 401: Unauthorized - Token may be expired');
+          // _token = null; // Limpiar el token
 
           // Mostrar el mensaje de error en un SnackBar
           final context = navigatorKey.currentContext;
@@ -66,7 +66,7 @@ class ApiClient {
           }
 
           // Redirigir a la página de inicio de sesión
-          GoRouter.of(navigatorKey.currentContext!).go(LoginPage.route);
+          // GoRouter.of(navigatorKey.currentContext!).go(LoginPage.route);
           return; // Detener el manejo de la respuesta aquí para el error 401
         }
 

@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
+import 'package:hogar_petfecto/features/adopcion/models/get_postulacion_by_id_response_model.dart';
+import 'package:hogar_petfecto/features/adopcion/providers/postulacion_use_case.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 
 class GestionPostulacionesAdoptantePage extends ConsumerStatefulWidget {
   const GestionPostulacionesAdoptantePage({super.key});
@@ -16,14 +19,22 @@ class GestionPostulacionesAdoptantePage extends ConsumerStatefulWidget {
 
 class _GestionPostulacionesAdoptantePageState
     extends ConsumerState<GestionPostulacionesAdoptantePage> {
-  final List<Map<String, String>> postulaciones = [
-    {'name': 'Basilio', 'age': '3 años', 'status': 'Pendiente'},
-    {'name': 'Firulais', 'age': '5 años', 'status': 'Aceptada'},
-    {'name': 'Luna', 'age': '1 año', 'status': 'Pendiente'},
-  ];
+  late final int perfilId;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(userStateNotifierProvider);
+    perfilId = user!.persona.perfiles
+        .firstWhere((perfil) => perfil.tipoPerfil.id == 1)
+        .id;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final getAllMascotasAsyncValue =
+        ref.watch(getPostulacionByIdUseCaseProvider(perfilId));
+
     return Scaffold(
       appBar: CustomAppBarWidget(
         title: 'Mis Postulaciones',
@@ -31,22 +42,33 @@ class _GestionPostulacionesAdoptantePageState
           GoRouter.of(context).pop();
         },
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(Margins.largeMargin),
-        child: ListView.builder(
-          itemCount: postulaciones.length,
-          itemBuilder: (context, index) {
-            return buildPostulacionCard(index);
-          },
+      body: getAllMascotasAsyncValue.when(
+        data: (postulacionResponse) {
+          return Padding(
+            padding: const EdgeInsets.all(Margins.largeMargin),
+            child: ListView.builder(
+              itemCount: postulacionResponse.postulacionDtos?.length ?? 0,
+              itemBuilder: (context, index) {
+                final postulacion = postulacionResponse.postulacionDtos![index];
+                return buildPostulacionCard(postulacion, perfilId);
+              },
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Text('Error al cargar lista de mascotas: $error'),
         ),
       ),
     );
   }
 
-  Widget buildPostulacionCard(int index) {
-    var name = postulaciones[index]['name']!;
-    var age = postulaciones[index]['age']!;
-    var status = postulaciones[index]['status']!;
+  Widget buildPostulacionCard(PostulacionDtos postulacion, int perfilId) {
+    final name = postulacion.mascota?.nombre ?? 'Desconocido';
+    final age = postulacion.mascota?.fechaNacimiento != null
+        ? '${DateTime.now().year - DateTime.parse(postulacion.mascota!.fechaNacimiento!).year} años'
+        : 'Edad desconocida';
+    final status = postulacion.estado?.estado ?? 'Estado desconocido';
 
     return Card(
       elevation: 4.0,
@@ -73,7 +95,7 @@ class _GestionPostulacionesAdoptantePageState
               icon: const Icon(Icons.delete_outline),
               color: Colors.red,
               onPressed: () {
-                eliminarPostulacion(index);
+                eliminarPostulacion(postulacion.id!, perfilId);
               },
             ),
           ],
@@ -82,12 +104,14 @@ class _GestionPostulacionesAdoptantePageState
     );
   }
 
-  void eliminarPostulacion(int index) {
-    setState(() {
-      postulaciones.removeAt(index);
-    });
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Postulación eliminada')),
-    );
-  }
+Future<void> eliminarPostulacion(int mascotaId, int perfilId) async {
+  await ref.read(deletePostulacionUseCaseProvider(mascotaId).future);
+
+  ref.refresh(getPostulacionByIdUseCaseProvider(perfilId));
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(content: Text('Postulación eliminada')),
+  );
+}
+
 }

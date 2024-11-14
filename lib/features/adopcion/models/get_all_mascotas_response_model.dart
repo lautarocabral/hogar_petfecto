@@ -1,17 +1,16 @@
-import 'package:hogar_petfecto/features/adopcion/models/tipo_mascota_response_model.dart';
 
-class MascotasForProtectorasResponseModel {
+class GetAllMascotasResponseModel {
   String? token;
-  List<MascotasDto>? mascotasDto;
+  List<GetAllMascotasDto>? mascotasDto;
 
-  MascotasForProtectorasResponseModel({this.token, this.mascotasDto});
+  GetAllMascotasResponseModel({this.token, this.mascotasDto});
 
-  MascotasForProtectorasResponseModel.fromJson(Map<String, dynamic> json) {
+  GetAllMascotasResponseModel.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     if (json['mascotasDto'] != null) {
-      mascotasDto = <MascotasDto>[];
+      mascotasDto = <GetAllMascotasDto>[];
       json['mascotasDto'].forEach((v) {
-        mascotasDto!.add(MascotasDto.fromJson(v));
+        mascotasDto!.add(GetAllMascotasDto.fromJson(v));
       });
     }
   }
@@ -26,7 +25,7 @@ class MascotasForProtectorasResponseModel {
   }
 }
 
-class MascotasDto {
+class GetAllMascotasDto {
   int? id;
   String? nombre;
   int? peso;
@@ -35,13 +34,13 @@ class MascotasDto {
   String? fechaNacimiento;
   bool? castrado;
   String? sexo;
+  String? descripcion;
   bool? vacunado;
   bool? adoptado;
   String? imagen;
-  String? descripcion;
   TipoMascota? tipoMascota;
 
-  MascotasDto({
+  GetAllMascotasDto({
     this.id,
     this.nombre,
     this.peso,
@@ -53,11 +52,11 @@ class MascotasDto {
     this.vacunado,
     this.adoptado,
     this.imagen,
-    this.tipoMascota,
     this.descripcion,
+    this.tipoMascota,
   });
 
-  MascotasDto.fromJson(Map<String, dynamic> json) {
+  GetAllMascotasDto.fromJson(Map<String, dynamic> json) {
     tipoMascota = json['tipoMascota'] != null
         ? TipoMascota.fromJson(json['tipoMascota'])
         : null;
@@ -92,6 +91,7 @@ class MascotasDto {
     data['vacunado'] = vacunado;
     data['adoptado'] = adoptado;
     data['imagen'] = imagen;
+    data['descripcion'] = descripcion;
     return data;
   }
 }

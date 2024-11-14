@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/features/adopcion/models/get_all_mascotas_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/models/mascotas_for_protectoras_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/confirmacion_contrato_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascota_page.dart';
@@ -111,12 +112,19 @@ class AppRouter {
       ),
       GoRoute(
         path: DescripcionMascotaPage.route,
-        builder: (context, state) => const DescripcionMascotaPage(),
+        builder: (context, state) {
+          final mascota = state.extra as GetAllMascotasDto;
+          return DescripcionMascotaPage(mascota: mascota);
+        },
       ),
       GoRoute(
         path: ConfirmacionContratoPage.route,
-        builder: (context, state) => const ConfirmacionContratoPage(),
+        builder: (context, state) {
+          final mascota = state.extra as GetAllMascotasDto;
+          return ConfirmacionContratoPage(mascota: mascota);
+        },
       ),
+
       //Generic
       GoRoute(
         path: CustomSuccessPage.route,

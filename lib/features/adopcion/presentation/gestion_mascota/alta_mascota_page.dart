@@ -30,6 +30,7 @@ class _AltaMascotaPageState extends ConsumerState<AltaMascotaPage> {
   final TextEditingController _pesoController = TextEditingController();
   final TextEditingController _fechaNacimientoController =
       TextEditingController();
+  final TextEditingController _descripcionController = TextEditingController();
 
   bool _aptoDepto = false;
   bool _aptoPerros = false;
@@ -68,6 +69,7 @@ class _AltaMascotaPageState extends ConsumerState<AltaMascotaPage> {
             'fechaNacimiento': _fechaNacimientoController.text,
             'castrado': _castrado,
             'sexo': _sexo,
+            'descripcion': _descripcionController.text,
             'vacunado': _vacunado,
             'adoptado': false,
             'imagen': base64Image,
@@ -313,8 +315,21 @@ class _AltaMascotaPageState extends ConsumerState<AltaMascotaPage> {
                         });
                       },
                     ),
-
-
+                    const SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _descripcionController,
+                      maxLines:
+                          5,
+                      validator: Validators.fieldRequired,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.pets),
+                        hintText: 'Descripcion',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
                     // Botón de guardar
                     Center(
                       child: CustomButton(
