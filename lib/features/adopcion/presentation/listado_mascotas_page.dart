@@ -83,10 +83,18 @@ class _ListadoMascotasPageState extends ConsumerState<ListadoMascotasPage> {
         : const AssetImage('assets/images/default_pet.png') as ImageProvider;
 
     return GestureDetector(
-      onTap: () => context.push(
-        DescripcionMascotaPage.route,
-        extra: mascota, // Pasar la información de la mascota
-      ),
+      onTap: () {
+        if (mascota.adoptado!) {
+          ScaffoldMessenger.of(context).showSnackBar(
+             SnackBar(content: Text('Este ${mascota.tipoMascota?.tipo} ya fue adoptado!!')),
+          );
+        } else {
+          context.push(
+            DescripcionMascotaPage.route,
+            extra: mascota, // Pasar la información de la mascota
+          );
+        }
+      },
       child: Card(
         elevation: 4.0,
         child: Column(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/features/adopcion/models/get_all_mascotas_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/models/mascotas_for_protectoras_response_model.dart';
+import 'package:hogar_petfecto/features/adopcion/models/postulaciones_with_postulantes_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/confirmacion_contrato_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/descripcion_mascota_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/alta_mascota_page.dart';
@@ -184,15 +185,24 @@ class AppRouter {
       GoRoute(
         path: DetallesPostulantePage.route,
         builder: (context, state) {
-          final args = state.extra as Map<String, dynamic>?;
-          final adoptante = args!['adoptante'] as String;
-          final detalles = args!['detalles'] as String;
+          final postulante =
+              state.extra as Personas; // Recuperar el objeto `Personas`
           return DetallesPostulantePage(
-            adoptante: adoptante,
-            detalles: detalles,
+            adoptante: postulante.razonSocial ?? 'Sin nombre',
+            detalles: '''
+          DNI: ${postulante.dni ?? 'Sin DNI'}
+          Dirección: ${postulante.direccion ?? 'Sin dirección'}
+          Teléfono: ${postulante.telefono ?? 'Sin teléfono'}
+          Fecha de Nacimiento: ${postulante.fechaNacimiento ?? 'Sin fecha'}
+          Estado Civil: ${postulante.estadoCivil ?? 'No especificado'}
+          Ocupación: ${postulante.ocupacion ?? 'No especificada'}
+          Experiencia con Mascotas: ${postulante.experienciaMascotas == true ? 'Sí' : 'No'}
+          Número de Mascotas: ${postulante.nroMascotas ?? 0}
+        ''',
           );
         },
       ),
+
       // Merchandising
       GoRoute(
         path: ListadoProductos.route,

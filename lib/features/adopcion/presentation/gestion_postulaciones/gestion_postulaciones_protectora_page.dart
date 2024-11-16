@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
+import 'package:hogar_petfecto/features/adopcion/models/postulaciones_with_postulantes_response_model.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/detalles_postulante_page.dart';
+import 'package:hogar_petfecto/features/adopcion/providers/postulacion_use_case.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 
 class GestionPostulacionesProtectoraPage extends ConsumerStatefulWidget {
   const GestionPostulacionesProtectoraPage({super.key});
@@ -17,53 +20,21 @@ class GestionPostulacionesProtectoraPage extends ConsumerStatefulWidget {
 
 class _GestionPostulacionesProtectoraPageState
     extends ConsumerState<GestionPostulacionesProtectoraPage> {
-  // Simulación de datos: cada mascota tiene una lista de postulaciones
-  final List<Map<String, dynamic>> mascotasPostuladas = [
-    {
-      'mascota': 'Basilio',
-      'postulaciones': [
-        {
-          'adoptante': 'Juan Pérez',
-          'status': 'Pendiente',
-          'detalles': 'Juan tiene 2 perros y está interesado en adoptar.'
-        },
-        {
-          'adoptante': 'Ana García',
-          'status': 'Aceptada',
-          'detalles':
-              'Ana es una amante de los animales con experiencia en adopciones.'
-        },
-      ],
-    },
-    {
-      'mascota': 'Firulais',
-      'postulaciones': [
-        {
-          'adoptante': 'Carlos Rodríguez',
-          'status': 'Pendiente',
-          'detalles': 'Carlos vive en una casa con jardín.'
-        },
-      ],
-    },
-    {
-      'mascota': 'Luna',
-      'postulaciones': [
-        {
-          'adoptante': 'María López',
-          'status': 'Pendiente',
-          'detalles': 'María busca una mascota para su familia.'
-        },
-        {
-          'adoptante': 'Pedro Sánchez',
-          'status': 'Rechazada',
-          'detalles': 'Pedro no tiene experiencia previa con mascotas.'
-        },
-      ],
-    },
-  ];
+  late final int perfilId;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = ref.read(userStateNotifierProvider);
+    perfilId = user!.persona.perfiles
+        .firstWhere((perfil) => perfil.tipoPerfil.id == 4)
+        .id;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final getPostulacionesOfProtectoraAsyncValue =
+        ref.watch(getPostulacionesWithPostulantesUseCaseProvider(perfilId));
     return Scaffold(
       appBar: CustomAppBarWidget(
         title: 'Postulaciones Recibidas',
@@ -71,96 +42,104 @@ class _GestionPostulacionesProtectoraPageState
           GoRouter.of(context).pop();
         },
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(Margins.largeMargin),
-        child: ListView.builder(
-          itemCount: mascotasPostuladas.length,
-          itemBuilder: (context, index) {
-            return buildMascotaSection(index);
-          },
+      body: getPostulacionesOfProtectoraAsyncValue.when(
+        data: (PostulacionesWithPostulantesResponseModel data) {
+          if (data.mascotaConPersonasDtos == null ||
+              data.mascotaConPersonasDtos!.isEmpty) {
+            return const Center(
+              child: Text('No se encontraron postulaciones.'),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.all(Margins.largeMargin),
+            child: ListView.builder(
+              itemCount: data.mascotaConPersonasDtos!.length,
+              itemBuilder: (context, index) {
+                final mascota = data.mascotaConPersonasDtos![index];
+                return buildMascotaSection(mascota);
+              },
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stackTrace) => Center(
+          child: Text('Error al cargar la lista de postulaciones: $error'),
         ),
       ),
     );
   }
 
-  // Sección para cada mascota con sus postulaciones
-  Widget buildMascotaSection(int index) {
-    var mascota = mascotasPostuladas[index]['mascota'];
-    var postulaciones =
-        mascotasPostuladas[index]['postulaciones'] as List<Map<String, String>>;
-
+  // Construir sección para cada mascota con sus postulantes
+  Widget buildMascotaSection(MascotaConPersonasDtos mascota) {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
       elevation: 4.0,
       child: ExpansionTile(
         title: Text(
-          'Mascota: $mascota',
+          'Mascota: ${mascota.nombre ?? "Sin nombre"}',
           style: const TextStyle(fontSize: 18),
         ),
-        children: postulaciones
-            .asMap()
-            .entries
-            .map((entry) =>
-                buildPostulacionCard(entry.key, postulaciones, index))
+        subtitle: Text('Tipo: ${mascota.tipoMascota ?? "Desconocido"}'),
+        children: (mascota.personas ?? [])
+            .map((postulante) => buildPostulacionCard(postulante, mascota))
             .toList(),
       ),
     );
   }
 
-  // Tarjeta para cada postulación dentro de una mascota
-  Widget buildPostulacionCard(int postIndex,
-      List<Map<String, String>> postulaciones, int mascotaIndex) {
-    var adoptante = postulaciones[postIndex]['adoptante']!;
-    var status = postulaciones[postIndex]['status']!;
-
+  // Tarjeta para cada postulante
+  Widget buildPostulacionCard(
+      Personas postulante, MascotaConPersonasDtos mascota) {
     return ListTile(
       contentPadding: const EdgeInsets.all(16.0),
       title: Text(
-        'Adoptante: $adoptante',
+        'Adoptante: ${postulante.razonSocial ?? "Desconocido"}',
         style: const TextStyle(fontSize: 16),
       ),
-      subtitle: Text('Estado: $status'),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('DNI: ${postulante.dni ?? "Sin DNI"}'),
+          Text('Estado Civil: ${postulante.estadoCivil ?? "No especificado"}'),
+        ],
+      ),
       trailing: PopupMenuButton<String>(
         onSelected: (String result) {
-          gestionarPostulacion(result, mascotaIndex, postIndex);
+          gestionarPostulacion(result, postulante);
         },
         itemBuilder: (BuildContext context) => [
-          const PopupMenuItem<String>(
+          PopupMenuItem<String>(
             value: 'aceptar',
-            child: Text('Aceptar'),
-          ),
-          const PopupMenuItem<String>(
-            value: 'rechazar',
-            child: Text('Rechazar'),
+            child: Text('Seleccionar'),
+            onTap: () {
+              ref.read(seleccionarAdoptanteUseCaseProvider(
+                  {'mascotaId': mascota.mascotaId!, 'adoptanteId': postulante.adoptanteId!}));
+
+              ref.refresh(
+                  getPostulacionesWithPostulantesUseCaseProvider(perfilId));
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Adopcion concretada con exito')),
+              );
+            },
           ),
         ],
         child: const Icon(Icons.more_vert),
       ),
       onTap: () => context.push(
         DetallesPostulantePage.route,
-        extra: {
-          'adoptante': adoptante,
-          'detalles': postulaciones[postIndex]['detalles'],
-        },
+        extra: postulante,
       ),
     );
   }
 
   // Gestionar la postulación seleccionada
-  void gestionarPostulacion(String accion, int mascotaIndex, int postIndex) {
-    setState(() {
-      if (accion == 'aceptar') {
-        mascotasPostuladas[mascotaIndex]['postulaciones'][postIndex]['status'] =
-            'Aceptada';
-      } else if (accion == 'rechazar') {
-        mascotasPostuladas[mascotaIndex]['postulaciones'][postIndex]['status'] =
-            'Rechazada';
-      }
-    });
+  void gestionarPostulacion(String accion, Personas postulante) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-          content: Text(
-              'Postulación ${accion == 'aceptar' ? 'aceptada' : 'rechazada'}')),
+        content: Text(
+            'Postulación de ${postulante.razonSocial ?? "el adoptante"} ${accion == 'aceptar' ? 'aceptada' : 'rechazada'}.'),
+      ),
     );
   }
 }
