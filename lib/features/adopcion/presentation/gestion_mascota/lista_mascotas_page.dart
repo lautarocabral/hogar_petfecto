@@ -165,7 +165,7 @@ class _ListaMascotasPageState extends ConsumerState<ListaMascotasPage> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(
-          child: Text('Error al cargar tipo de mascotas: $error'),
+          child: Text('Error al cargar merchandising: $error'),
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
