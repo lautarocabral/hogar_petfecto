@@ -41,14 +41,14 @@ class Productos {
       this.imagen});
 
   Productos.fromJson(Map<String, dynamic> json) {
-    id = json['Id'];
+    id = json['id'];
     descripcion = json['descripcion'];
     stock = json['stock'];
     precio = json['precio'];
     categoria = json['categoria'] != null
         ? Categoria.fromJson(json['categoria'])
         : null;
-    imagen = json['Imagen'];
+    imagen = json['imagen'];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,9 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/merchandising/models/lista_productos_response_model.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/editar_producto_page.dart';
+import 'package:hogar_petfecto/features/merchandising/providers/editar_merchandising_use_case.dart';
+import 'package:hogar_petfecto/features/merchandising/providers/eliminar_merchandising_use_case.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/lista_merchandising_use_case.dart';
 
 class ListaProductosPage extends ConsumerStatefulWidget {
@@ -16,8 +21,6 @@ class ListaProductosPage extends ConsumerStatefulWidget {
 }
 
 class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
-
-
   void _confirmarEliminarProducto(BuildContext context, Productos producto) {
     showDialog(
       context: context,
@@ -36,8 +39,8 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
             TextButton(
               child:
                   const Text('Eliminar', style: TextStyle(color: Colors.red)),
-              onPressed: () {
-                
+              onPressed: () async {
+                await _eliminarProducto(producto.id);
                 Navigator.of(context).pop();
               },
             ),
@@ -47,26 +50,20 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
     );
   }
 
+  Future<void> _eliminarProducto(id) async {
+    await ref.read(eliminarMerchandisingUseCaseProvider(id).future);
+    ref.invalidate(listaMerchandisingUseCaseProvider);
+  }
+
   void _agregarProducto() {
-    // Lógica para agregar un nuevo producto
-    // Navegar a una pantalla de formulario o agregar directamente
-    // setState(() {
-    //   productos.add(Producto(
-    //     id: productos.length + 1,
-    //     descripcion: 'Nuevo Producto',
-    //     stock: 0,
-    //     precio: 0.0,
-    //     categoria: 'Nueva Categoría',
-    //   ));
-    // });
     context.push(AltaProductoPage.route);
   }
 
-  void _editarProducto() {
-    // Lógica para editar un producto
-    // Navegar a una pantalla de edición con los datos del producto
-    // Para este ejemplo, solo vamos a actualizar el stock
- 
+  void _editarProducto(Productos producto) {
+    context.push(
+      EditarProductoPage.route,
+      extra: producto,
+    );
   }
 
   @override
@@ -94,9 +91,15 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
                   const SizedBox(height: 16.0),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: listaMerchandisingAsyncValue.productos?.length ?? 1,
+                      itemCount:
+                          listaMerchandisingAsyncValue.productos?.length ?? 1,
                       itemBuilder: (context, index) {
-                       
+                        final imageBytes = listaMerchandisingAsyncValue
+                                    .productos?[index].imagen !=
+                                null
+                            ? base64Decode(listaMerchandisingAsyncValue
+                                .productos![index].imagen!)
+                            : null;
                         return Card(
                           elevation: 3.0,
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
@@ -105,16 +108,27 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
                           ),
                           child: ListTile(
                             leading: CircleAvatar(
-                              child: Text(listaMerchandisingAsyncValue.productos?[index].id.toString() ?? ''),
+                              radius: 30,
+                              backgroundImage: imageBytes != null
+                                  ? MemoryImage(imageBytes)
+                                  : null,
+                              child: imageBytes == null
+                                  ? const Icon(Icons.card_giftcard_sharp,
+                                      size: 30)
+                                  : null,
                             ),
-                            title: Text(listaMerchandisingAsyncValue.productos?[index].descripcion ?? ''),
+                            title: Text(listaMerchandisingAsyncValue
+                                    .productos?[index].descripcion ??
+                                ''),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('Stock: ${listaMerchandisingAsyncValue.productos?[index].stock} ?? !!!!!!!!!!!'),
                                 Text(
-                                    'Precio: \$ ${listaMerchandisingAsyncValue.productos?[index].precio} ?? !!!!!!!!!'),
-                                Text('Categoría: ${listaMerchandisingAsyncValue.productos?[index].categoria?.nombre ?? '!!!!!!!!!'}'),
+                                    'Stock: ${listaMerchandisingAsyncValue.productos?[index].stock} '),
+                                Text(
+                                    'Precio: \$ ${listaMerchandisingAsyncValue.productos?[index].precio} '),
+                                Text(
+                                    'Categoría: ${listaMerchandisingAsyncValue.productos?[index].categoria?.nombre ?? '!!!!!!!!!'}'),
                               ],
                             ),
                             trailing: Row(
@@ -125,7 +139,8 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
                                       color: Colors.blue),
                                   onPressed: () {
                                     // Navegar a la pantalla de edición de producto
-                                    _editarProducto();
+                                    _editarProducto(listaMerchandisingAsyncValue
+                                        .productos![index]);
                                   },
                                 ),
                                 IconButton(
@@ -134,7 +149,9 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
                                   onPressed: () {
                                     // Confirmación y acción de eliminar producto
                                     _confirmarEliminarProducto(
-                                        context, listaMerchandisingAsyncValue.productos![index]);
+                                        context,
+                                        listaMerchandisingAsyncValue
+                                            .productos![index]);
                                   },
                                 ),
                               ],

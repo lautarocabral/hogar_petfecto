@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,32 +10,48 @@ import 'package:hogar_petfecto/core/utils/validators.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
 import 'package:hogar_petfecto/features/merchandising/models/lista_categorias_response_model.dart';
-import 'package:hogar_petfecto/features/merchandising/providers/alta_merchandising_use_case.dart';
+import 'package:hogar_petfecto/features/merchandising/models/lista_productos_response_model.dart';
+import 'package:hogar_petfecto/features/merchandising/providers/editar_merchandising_use_case.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/lista_categoria_use_case.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/lista_merchandising_use_case.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
-class AltaProductoPage extends ConsumerStatefulWidget {
-  const AltaProductoPage({super.key});
-  static const String route = '/alta_producto';
+class EditarProductoPage extends ConsumerStatefulWidget {
+  const EditarProductoPage({
+    super.key,
+    required this.producto,
+  });
+
+  static const String route = '/editar_producto';
+
+  final Productos producto;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _AltaProductoPageState();
+      _EditarProductoPageState();
 }
 
-class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
-  final TextEditingController descripcionController = TextEditingController();
-  final TextEditingController stockController = TextEditingController();
-  final TextEditingController precioController = TextEditingController();
+class _EditarProductoPageState extends ConsumerState<EditarProductoPage> {
+  late TextEditingController descripcionController;
+  late TextEditingController stockController;
+  late TextEditingController precioController;
   File? _image;
-  final _formCargaMerchandisingKey = GlobalKey<FormState>();
+  late Categorias? selectedCategoria;
+  final _formEditarMerchandisingKey = GlobalKey<FormState>();
 
-  // Lista de categorías simulada
-  Categorias? selectedCategoria;
+  @override
+  void initState() {
+    super.initState();
+    descripcionController =
+        TextEditingController(text: widget.producto.descripcion);
+    stockController =
+        TextEditingController(text: widget.producto.stock.toString());
+    precioController =
+        TextEditingController(text: widget.producto.precio.toString());
+    // Initialization moved to the build method where listaCategoriasAsyncValue is available.
+    selectedCategoria = null;
+  }
 
-  // Función para seleccionar una imagen desde la galería o cámara
   Future<void> _pickImage(ImageSource source) async {
     final pickedFile = await ImagePicker().pickImage(source: source);
     if (pickedFile != null) {
@@ -44,76 +61,58 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
     }
   }
 
-  Future<void> _guardarProducto() async {
-    if (_image != null) {
-      if (_formCargaMerchandisingKey.currentState?.validate() ?? false) {
-        try {
-          final bytes = await _image!.readAsBytes();
-          final base64Image = base64Encode(bytes);
+  Future<void> _editarProducto() async {
+    if (_formEditarMerchandisingKey.currentState?.validate() ?? false) {
+      try {
+        final base64Image =
+            _image != null ? base64Encode(await _image!.readAsBytes()) : null;
 
-          final credentials = {
-            'imagen': base64Image,
-            'productoId': 0,
-            'descripcion': descripcionController.text,
-            'stock': int.parse(stockController.text),
-            'precio': int.parse(precioController.text),
-            'categoriaId': selectedCategoria?.id,
-          };
+        final credentials = {
+          'productoId': widget.producto.id,
+          'imagen': base64Image ?? widget.producto.imagen,
+          'descripcion': descripcionController.text,
+          'stock': int.parse(stockController.text),
+          'precio': int.parse(precioController.text),
+          'categoriaId': selectedCategoria?.id ?? widget.producto.categoria?.id,
+        };
 
-          // Call provider to save the mascota
-          await ref.read(altaMerchandisingUseCaseProvider(credentials).future);
+        await ref.read(editarMerchandisingUseCaseProvider(credentials).future);
 
-          // Invalidate getMascotasForProtectoraProvider to refresh the list
-          ref.invalidate(listaMerchandisingUseCaseProvider);
+        ref.invalidate(listaMerchandisingUseCaseProvider);
 
-          _formCargaMerchandisingKey.currentState?.reset();
-
-          await ScaffoldMessenger.of(context)
-              .showSnackBar(
-                const SnackBar(
-                  content: Text('Producto cargado con éxito'),
-                  duration: Duration(seconds: 1),
-                ),
-              )
-              .closed;
-
-          context.pop();
-        } on DioException catch (e) {
-          ref.read(apiClientProvider).handleError(context, e);
-        }
+        _formEditarMerchandisingKey.currentState?.reset();
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Producto actualizado con éxito')),
+        );
+        Navigator.of(context).pop();
+      } on DioException catch (e) {
+        ref.read(apiClientProvider).handleError(context, e);
       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Debe subir una imagen'),
-          duration: Duration(seconds: 1),
-        ),
-      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final listaCategoriasAsyncValue = ref.watch(listaCategoriaUseCaseProvider);
+
     return Scaffold(
-      appBar: const CustomAppBarWidget(title: 'Alta de Producto'),
+      appBar: const CustomAppBarWidget(title: 'Editar Producto'),
       body: listaCategoriasAsyncValue.when(
         data: (listaCategoriasAsyncValue) {
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16.0),
             child: Form(
-              key: _formCargaMerchandisingKey,
+              key: _formEditarMerchandisingKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Información del Producto',
+                    'Editar Información del Producto',
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16.0),
-
-                  // Campo de descripción
                   CustomTextField(
                     hintText: 'Descripción',
                     controller: descripcionController,
@@ -123,8 +122,6 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                     keyboardType: TextInputType.text,
                   ),
                   const SizedBox(height: 16.0),
-
-                  // Campo de stock
                   CustomTextField(
                     hintText: 'Stock',
                     controller: stockController,
@@ -133,8 +130,6 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16.0),
-
-                  // Campo de precio
                   CustomTextField(
                     hintText: 'Precio',
                     controller: precioController,
@@ -143,7 +138,6 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16.0),
-                  // Dropdown para categoría
                   const Text(
                     'Seleccionar Categoría',
                     style:
@@ -151,6 +145,10 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                   ),
                   const SizedBox(height: 10.0),
                   DropdownButtonFormField<Categorias>(
+                    value: selectedCategoria ??
+                        listaCategoriasAsyncValue.categorias?.firstWhere(
+                            (categoria) =>
+                                categoria.id == widget.producto.categoria!.id),
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.pets),
                       hintText: 'Categoria',
@@ -158,7 +156,6 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                     ),
-                    value: selectedCategoria,
                     items: listaCategoriasAsyncValue.categorias
                         ?.map<DropdownMenuItem<Categorias>>(
                             (Categorias categoria) {
@@ -169,13 +166,11 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                     }).toList(),
                     onChanged: (Categorias? newValue) {
                       setState(() {
-                        selectedCategoria = newValue!;
+                        selectedCategoria = newValue;
                       });
                     },
                   ),
                   const SizedBox(height: 16.0),
-
-                  // Sección para seleccionar una imagen
                   const Text(
                     'Subir Imagen del Producto',
                     style:
@@ -184,11 +179,16 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                   const SizedBox(height: 10.0),
                   Center(
                     child: _image == null
-                        ? const Text('No se ha seleccionado ninguna imagen.')
+                        ? (widget.producto.imagen != null
+                            ? Image.memory(
+                                base64Decode(widget.producto.imagen!),
+                                height: 200.0,
+                                fit: BoxFit.cover)
+                            : const Text(
+                                'No se ha seleccionado ninguna imagen.'))
                         : Image.file(_image!, height: 200.0, fit: BoxFit.cover),
                   ),
                   const SizedBox(height: 16.0),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -206,22 +206,9 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                     ],
                   ),
                   const SizedBox(height: 24.0),
-
-                  // Botón para guardar el producto
                   Center(
                     child: ElevatedButton(
-                      onPressed: () {
-                        if (selectedCategoria == null) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Debe seleccionar una categoria'),
-                              duration: Duration(seconds: 1),
-                            ),
-                          );
-                        } else {
-                          _guardarProducto();
-                        }
-                      },
+                      onPressed: _editarProducto,
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.blueAccent,
@@ -232,7 +219,7 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                         ),
                       ),
                       child: const Text(
-                        'Guardar Producto',
+                        'Guardar Cambios',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -244,7 +231,7 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
         },
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stackTrace) => Center(
-          child: Text('Error al cargar lista de mascotas: $error'),
+          child: Text('Error al cargar lista de categorías: $error'),
         ),
       ),
     );

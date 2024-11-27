@@ -15,9 +15,11 @@ import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_p
 import 'package:hogar_petfecto/features/common/presentation/custom_error_page.dart';
 import 'package:hogar_petfecto/features/common/presentation/custom_success_page.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart';
+import 'package:hogar_petfecto/features/merchandising/models/lista_productos_response_model.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/checkout_carrito_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/editar_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historia_ventas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
@@ -234,6 +236,16 @@ class AppRouter {
       GoRoute(
         path: AltaProductoPage.route,
         builder: (context, state) => const AltaProductoPage(),
+      ),
+      GoRoute(
+        path: EditarProductoPage.route,
+        builder: (context, state) {
+          final args = state.extra as Productos;
+
+          return EditarProductoPage(
+            producto: args,
+          );
+        },
       ),
       GoRoute(
         path: HistorialComprasPage.route,
