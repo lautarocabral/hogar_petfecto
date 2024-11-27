@@ -88,6 +88,7 @@ class _EditarMascotaPageState extends ConsumerState<EditarMascotaPage> {
           'vacunado': _vacunado,
           'adoptado':false,
           'imagen': base64Image,
+          'descripcion': widget.mascota.descripcion,
           'id': widget.mascota.id,
         };
 
