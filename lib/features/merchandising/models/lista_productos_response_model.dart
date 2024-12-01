@@ -31,14 +31,23 @@ class Productos {
   double? precio;
   Categoria? categoria;
   String? imagen;
+  String? titulo;
+  Protectora? protectora;
+  int? protectoraId;
+  String? nombreProtectora;
 
-  Productos(
-      {this.id,
-      this.descripcion,
-      this.stock,
-      this.precio,
-      this.categoria,
-      this.imagen});
+  Productos({
+    this.id,
+    this.descripcion,
+    this.stock,
+    this.precio,
+    this.categoria,
+    this.imagen,
+    this.titulo,
+    this.nombreProtectora,
+    this.protectora,
+    this.protectoraId,
+  });
 
   Productos.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -48,7 +57,14 @@ class Productos {
     categoria = json['categoria'] != null
         ? Categoria.fromJson(json['categoria'])
         : null;
+    protectora = json['protectora'] != null
+        ? Protectora.fromJson(json['protectora'])
+        : null;
+    protectoraId = json['protectoraId'];
+
     imagen = json['imagen'];
+    titulo = json['titulo'];
+    nombreProtectora = json['nombreProtectora'];
   }
 
   Map<String, dynamic> toJson() {
@@ -61,6 +77,8 @@ class Productos {
       data['categoria'] = categoria!.toJson();
     }
     data['imagen'] = imagen;
+    data['titulo'] = titulo;
+    data['nombreProtectora'] = nombreProtectora;
     return data;
   }
 }
@@ -82,4 +100,29 @@ class Categoria {
     data['nombre'] = nombre;
     return data;
   }
+}
+
+class Protectora {
+  int? capacidad;
+  int? nroVoluntarios;
+  int? cantidadInicialMascotas;
+
+  Protectora({
+    this.capacidad,
+    this.nroVoluntarios,
+    this.cantidadInicialMascotas,
+  });
+
+  Protectora.fromJson(Map<String, dynamic> json) {
+    capacidad = json['capacidad'];
+    nroVoluntarios = json['nroVoluntarios'];
+    cantidadInicialMascotas = json['cantidadInicialMascotas'];
+  }
+
+  // Map<String, dynamic> toJson() {
+  //   final Map<String, dynamic> data = <String, dynamic>{};
+  //   data['id'] = id;
+  //   data['nombre'] = nombre;
+  //   return data;
+  // }
 }

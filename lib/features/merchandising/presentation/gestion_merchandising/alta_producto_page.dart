@@ -25,6 +25,7 @@ class AltaProductoPage extends ConsumerStatefulWidget {
 }
 
 class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
+  final TextEditingController tituloController = TextEditingController();
   final TextEditingController descripcionController = TextEditingController();
   final TextEditingController stockController = TextEditingController();
   final TextEditingController precioController = TextEditingController();
@@ -55,6 +56,7 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
             'imagen': base64Image,
             'productoId': 0,
             'descripcion': descripcionController.text,
+            'titulo': tituloController.text,
             'stock': int.parse(stockController.text),
             'precio': int.parse(precioController.text),
             'categoriaId': selectedCategoria?.id,
@@ -112,18 +114,30 @@ class _AltaProductoPageState extends ConsumerState<AltaProductoPage> {
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16.0),
-
-                  // Campo de descripción
+                  // Campo de Titulo
                   CustomTextField(
-                    hintText: 'Descripción',
-                    controller: descripcionController,
+                    hintText: 'Titulo',
+                    controller: tituloController,
                     textInputAction: TextInputAction.next,
                     validator: Validators.fieldRequired,
-                    prefixIcon: const Icon(Icons.description),
+                    prefixIcon: const Icon(Icons.title_rounded),
                     keyboardType: TextInputType.text,
                   ),
                   const SizedBox(height: 16.0),
-
+                  // Campo de descripción
+                  TextFormField(
+                    controller: descripcionController,
+                    maxLines: 5,
+                    validator: Validators.fieldRequired,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.pets),
+                      hintText: 'Descripcion',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
                   // Campo de stock
                   CustomTextField(
                     hintText: 'Stock',

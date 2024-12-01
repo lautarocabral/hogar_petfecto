@@ -30,6 +30,7 @@ class _SignUpProtectoraPageState extends ConsumerState<SignUpProtectoraPage> {
           'capacidad': int.parse(capacityController.text),
           'nroVoluntarios': int.parse(volunteersController.text),
           'cantidadInicialMascotas': int.parse(mascotasController.text),
+          'nombreProtectora':'',
         };
 
         await ref.read(protectoraProvider(credentials).future);

@@ -35,6 +35,7 @@ class _EditarProductoPageState extends ConsumerState<EditarProductoPage> {
   late TextEditingController descripcionController;
   late TextEditingController stockController;
   late TextEditingController precioController;
+  late TextEditingController tituloController;
   File? _image;
   late Categorias? selectedCategoria;
   final _formEditarMerchandisingKey = GlobalKey<FormState>();
@@ -48,6 +49,8 @@ class _EditarProductoPageState extends ConsumerState<EditarProductoPage> {
         TextEditingController(text: widget.producto.stock.toString());
     precioController =
         TextEditingController(text: widget.producto.precio.toString());
+    tituloController =
+        TextEditingController(text: widget.producto.titulo);
     // Initialization moved to the build method where listaCategoriasAsyncValue is available.
     selectedCategoria = null;
   }
@@ -71,8 +74,10 @@ class _EditarProductoPageState extends ConsumerState<EditarProductoPage> {
           'productoId': widget.producto.id,
           'imagen': base64Image ?? widget.producto.imagen,
           'descripcion': descripcionController.text,
+          'titulo': tituloController.text,
           'stock': int.parse(stockController.text),
-          'precio': int.parse(precioController.text),
+          'precio': int.parse(double.parse(precioController.text).toStringAsFixed(0)),
+
           'categoriaId': selectedCategoria?.id ?? widget.producto.categoria?.id,
         };
 
@@ -81,7 +86,7 @@ class _EditarProductoPageState extends ConsumerState<EditarProductoPage> {
         ref.invalidate(listaMerchandisingUseCaseProvider);
 
         _formEditarMerchandisingKey.currentState?.reset();
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Producto actualizado con éxito')),
         );
@@ -112,14 +117,26 @@ class _EditarProductoPageState extends ConsumerState<EditarProductoPage> {
                     style:
                         TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 16.0),
                   CustomTextField(
-                    hintText: 'Descripción',
-                    controller: descripcionController,
+                    hintText: 'Titulo',
+                    controller: tituloController,
                     textInputAction: TextInputAction.next,
                     validator: Validators.fieldRequired,
-                    prefixIcon: const Icon(Icons.description),
+                    prefixIcon: const Icon(Icons.title_rounded),
                     keyboardType: TextInputType.text,
+                  ),
+                  const SizedBox(height: 16.0),
+                  TextFormField(
+                    controller: descripcionController,
+                    maxLines: 5,
+                    validator: Validators.fieldRequired,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.pets),
+                      hintText: 'Descripcion',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 16.0),
                   CustomTextField(

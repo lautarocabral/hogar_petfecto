@@ -116,7 +116,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   'Merchandising',
                   Icons.shopping_bag,
                   () {
-                    context.push(ListadoProductos.route);
+                    context.push(ListadoProductosPage.route);
                   },
                 ),
               if (user.grupos.any(

@@ -207,13 +207,13 @@ class AppRouter {
 
       // Merchandising
       GoRoute(
-        path: ListadoProductos.route,
-        builder: (context, state) => const ListadoProductos(),
+        path: ListadoProductosPage.route,
+        builder: (context, state) => const ListadoProductosPage(),
       ),
       GoRoute(
         path: DescripcionProductoPage.route,
         builder: (context, state) {
-          final product = state.extra as Product;
+          final product = state.extra as Productos;
           return DescripcionProductoPage(product: product);
         },
       ),
@@ -223,10 +223,7 @@ class AppRouter {
           final args = state.extra as Map<String, dynamic>?;
           final items = args!['cartItems'] as List<dynamic>;
           final totalPrice = items.fold(0.0, (sum, item) => sum + item.price);
-          return CheckoutCarritoPage(
-            cartItems: List<Product>.from(items),
-            totalPrice: totalPrice,
-          );
+          return const CheckoutCarritoPage();
         },
       ),
       GoRoute(

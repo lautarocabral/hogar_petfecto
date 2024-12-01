@@ -7,7 +7,6 @@ import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/merchandising/models/lista_productos_response_model.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/editar_producto_page.dart';
-import 'package:hogar_petfecto/features/merchandising/providers/editar_merchandising_use_case.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/eliminar_merchandising_use_case.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/lista_merchandising_use_case.dart';
 
@@ -118,7 +117,7 @@ class _ListaProductosPageState extends ConsumerState<ListaProductosPage> {
                                   : null,
                             ),
                             title: Text(listaMerchandisingAsyncValue
-                                    .productos?[index].descripcion ??
+                                    .productos?[index].titulo ??
                                 ''),
                             subtitle: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
