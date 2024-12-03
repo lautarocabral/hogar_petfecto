@@ -136,7 +136,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
                 const Gap(10),
               // VETERINARIA
-              if (user.grupos.any(
+              if (!user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
                 buildBannerButton(
                   context,
@@ -146,6 +146,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     context.push(VeterinariaMapPage.route);
                   },
                 ),
+
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
                 const Gap(10),
