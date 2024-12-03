@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:hogar_petfecto/features/common/presentation/custom_success_page.dart';
 import 'package:hogar_petfecto/features/merchandising/models/lista_productos_response_model.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/carrito_state_notifier.dart';
 import 'package:hogar_petfecto/features/merchandising/providers/crear_pedido_use_case.dart';
@@ -22,11 +24,16 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
   @override
   Widget build(BuildContext context) {
     final carritoNotifier = ref.read(carritoProvider.notifier);
+
+    // Data for UI
     final pedidosPorProtectora =
-        carritoNotifier.obtenerPedidosPorProtectora(); // Agrupa los pedidos
+        carritoNotifier.obtenerPedidosPorProtectoraUI();
+
+    // Data for request
+    final formatoParaRequest = carritoNotifier.obtenerFormatoParaRequest();
+
     final totalPrice = carritoNotifier.calcularPrecioTotal();
 
-    // Inicializa el estado de selección si es la primera vez
     pedidosPorProtectora.forEach((pedido) {
       _selectedProtectoras.putIfAbsent(pedido['protectoraId'], () => true);
     });
@@ -46,7 +53,8 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
                   final pedido = pedidosPorProtectora[index];
                   final protectoraId = pedido['protectoraId'];
                   final nombreProtectora = pedido['nombreProtectora'];
-                  final productos = pedido['productos'] as List<Productos>;
+                  final productos = pedido['productos'] as List<CarritoItem>;
+
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     elevation: 3,
@@ -93,10 +101,11 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
                             physics: const ClampingScrollPhysics(),
                             itemCount: productos.length,
                             itemBuilder: (context, prodIndex) {
-                              final producto = productos[prodIndex];
-                              final imageBytes = producto.imagen != null
-                                  ? base64Decode(producto.imagen!)
+                              final item = productos[prodIndex];
+                              final imageBytes = item.producto.imagen != null
+                                  ? base64Decode(item.producto.imagen!)
                                   : null;
+
                               return ListTile(
                                 leading: imageBytes != null
                                     ? Image.memory(
@@ -107,8 +116,77 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
                                       )
                                     : const Icon(Icons.image_not_supported,
                                         size: 50),
-                                title: Text(producto.titulo ?? 'Producto'),
-                                subtitle: Text('\$${producto.precio ?? 0.0}'),
+                                title: Text(item.producto.titulo ?? 'Producto'),
+                                subtitle: Text(
+                                    'Cantidad: ${item.cantidad} - \$${(item.producto.precio ?? 0.0) * item.cantidad}'),
+                                trailing: SizedBox(
+                                  width:
+                                      120, // Define un ancho máximo para los botones
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(Icons.remove,
+                                            color: Colors.red),
+                                        onPressed: () {
+                                          if (item.cantidad > 1) {
+                                            // Disminuir la cantidad del producto
+                                            ref
+                                                .read(carritoProvider.notifier)
+                                                .actualizarCantidad(
+                                                    item.producto,
+                                                    item.cantidad - 1);
+                                            setState(() {});
+                                          } else {
+                                            // Eliminar producto si la cantidad es 1
+                                            ref
+                                                .read(carritoProvider.notifier)
+                                                .eliminarProducto(
+                                                    item.producto);
+                                            setState(() {});
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    '${item.producto.titulo} eliminado del carrito'),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                      Text(
+                                        '${item.cantidad}',
+                                        style: const TextStyle(fontSize: 16),
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(Icons.add,
+                                            color: Colors.green),
+                                        onPressed: () {
+                                          if (item.cantidad <
+                                              item.producto.stock!) {
+                                            // Aumentar la cantidad del producto, respetando el stock
+                                            ref
+                                                .read(carritoProvider.notifier)
+                                                .actualizarCantidad(
+                                                    item.producto,
+                                                    item.cantidad + 1);
+                                            setState(() {});
+                                          } else {
+                                            // Mostrar mensaje si se excede el stock
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                    'No puedes agregar más de ${item.producto.stock} unidades de ${item.producto.titulo}'),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               );
                             },
                           ),
@@ -124,11 +202,28 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
+                  '',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  '\$${'${totalPrice.toStringAsFixed(2)} + 15%'}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
                   'Total:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '\$${totalPrice.toStringAsFixed(2)}',
+                  '\$${(double.parse(totalPrice.toStringAsFixed(2)) * 1.15).toStringAsFixed(2)}',
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -143,8 +238,7 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () async {
-                      // Filtrar los pedidos seleccionados
-                      final pedidosSeleccionados = pedidosPorProtectora
+                      final pedidosSeleccionados = formatoParaRequest
                           .where((pedido) =>
                               _selectedProtectoras[pedido['protectoraId']] ==
                               true)
@@ -160,27 +254,13 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
                         return;
                       }
 
-                      // Construir el cuerpo consolidado para la solicitud
-                      final body = {
-                        "pedidos": pedidosSeleccionados.map((pedido) {
-                          return {
-                            "protectoraId": pedido["protectoraId"],
-                            "productos":
-                                (pedido["productos"] as List<Productos>)
-                                    .map((producto) => {"id": producto.id})
-                                    .toList(),
-                          };
-                        }).toList(),
-                      };
+                      final body = {"pedidos": pedidosSeleccionados};
 
                       try {
-                        // Hacer una única llamada al backend con toda la lista de pedidos
                         await ref.read(crearPedidoUseCaseProvider(body).future);
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text(
-                                  'Pedidos seleccionados creados exitosamente')),
+                        context.go(
+                          '${CustomSuccessPage.route}?message=¡Compra exitosa!\n\nLa protectora te contactará\npara poder recibir tu compra',
                         );
 
                         carritoNotifier.vaciarCarrito();
@@ -199,5 +279,24 @@ class _CheckoutCarritoPageState extends ConsumerState<CheckoutCarritoPage> {
         ),
       ),
     );
+  }
+}
+
+class ProductoResponse {
+  int? id;
+  String? cantidad;
+
+  ProductoResponse({this.id, this.cantidad});
+
+  ProductoResponse.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    cantidad = json['cantidad'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['cantidad'] = cantidad;
+    return data;
   }
 }

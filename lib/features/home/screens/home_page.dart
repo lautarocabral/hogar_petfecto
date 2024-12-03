@@ -9,7 +9,7 @@ import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulacio
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_protectora_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
-import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historia_ventas_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_ventas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';

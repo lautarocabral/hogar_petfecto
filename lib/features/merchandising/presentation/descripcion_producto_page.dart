@@ -18,11 +18,14 @@ class DescripcionProductoPage extends ConsumerStatefulWidget {
 
 class _DescripcionProductoPageState
     extends ConsumerState<DescripcionProductoPage> {
+  int _cantidad = 1;
+
   @override
   Widget build(BuildContext context) {
     final imageBytes = widget.product.imagen != null
         ? base64Decode(widget.product.imagen!)
         : null;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Producto'),
@@ -32,7 +35,6 @@ class _DescripcionProductoPageState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Imagen del producto
             Center(
               child: Image.memory(
                 imageBytes!,
@@ -41,53 +43,88 @@ class _DescripcionProductoPageState
                 fit: BoxFit.cover,
               ),
             ),
-
             const SizedBox(height: 16.0),
-
-            // Nombre del producto
             Text(
               widget.product.titulo ?? '',
-              style: const TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8.0),
-
-            // Precio del producto
             Text(
               '\$${widget.product.precio}',
               style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.green,
-              ),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green),
             ),
             const SizedBox(height: 16.0),
-
-            // Descripción del producto
             Text(
               widget.product.descripcion ?? '',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 24.0),
 
-            // Botón de agregar al carrito
+            // Selector de cantidad
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      if (_cantidad > 1) _cantidad--;
+                    });
+                  },
+                  icon: const Icon(Icons.remove),
+                ),
+                Text(
+                  '$_cantidad',
+                  style: const TextStyle(fontSize: 18),
+                ),
+                IconButton(
+                  onPressed: () {
+                    if (_cantidad < widget.product.stock!) {
+                      setState(() {
+                        _cantidad++;
+                      });
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              'No puedes agregar más de ${widget.product.stock} unidades'),
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.add),
+                ),
+              ],
+            ),
+            const SizedBox(height: 24.0),
+
             Center(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  ref
+                  final agregado = ref
                       .read(carritoProvider.notifier)
-                      .agregarProducto(widget.product);
-                  context.pop();
+                      .agregarProducto(widget.product, _cantidad);
 
-                  // Aquí se manejará la lógica para agregar al carrito
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content:
-                          Text('${widget.product.titulo} agregado al carrito'),
-                    ),
-                  );
+                  if (agregado) {
+                    // Producto agregado exitosamente
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            '${widget.product.titulo} (x$_cantidad) agregado al carrito'),
+                      ),
+                    );
+                    context.pop();
+                  } else {
+                    // Producto ya está en el carrito
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                            '${widget.product.titulo} ya está en el carrito'),
+                      ),
+                    );
+                  }
                 },
                 icon: const Icon(Icons.add_shopping_cart),
                 label: const Text('Agregar al Carrito'),

@@ -21,10 +21,11 @@ import 'package:hogar_petfecto/features/merchandising/presentation/descripcion_p
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/alta_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/editar_producto_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
-import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historia_ventas_page.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_ventas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
+import 'package:hogar_petfecto/features/merchandising/presentation/oc_pdf_page.dart';
 import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
@@ -215,6 +216,13 @@ class AppRouter {
         builder: (context, state) {
           final product = state.extra as Productos;
           return DescripcionProductoPage(product: product);
+        },
+      ),
+       GoRoute(
+        path: OcPdfPage.route,
+        builder: (context, state) {
+          final file = state.extra as String;
+          return OcPdfPage(file: file);
         },
       ),
       GoRoute(
