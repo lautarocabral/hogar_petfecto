@@ -26,10 +26,12 @@ import 'package:hogar_petfecto/features/merchandising/presentation/historial_mer
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/oc_pdf_page.dart';
+import 'package:hogar_petfecto/features/seguridad/models/lista_usuarios_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/alta_usuario_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/editar_usuario_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
@@ -41,6 +43,7 @@ import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page
 import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/renovar_suscripcion_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_descripcion_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_map_page.dart';
@@ -75,6 +78,15 @@ class AppRouter {
 
           return SubscriptionPage(
             veterinariaModel: veterinariaModel,
+          );
+        },
+      ),
+      GoRoute(
+        path: EditarUsuarioPage.route,
+        builder: (context, state) {
+          final usuario = state.extra as UsuarioDtos;
+          return EditarUsuarioPage(
+            usuario: usuario,
           );
         },
       ),
@@ -218,7 +230,7 @@ class AppRouter {
           return DescripcionProductoPage(product: product);
         },
       ),
-       GoRoute(
+      GoRoute(
         path: OcPdfPage.route,
         builder: (context, state) {
           final file = state.extra as String;
@@ -299,6 +311,12 @@ class AppRouter {
       GoRoute(
         path: GestionSuscripcionesPage.route,
         builder: (context, state) => const GestionSuscripcionesPage(),
+      ),
+      GoRoute(
+        path: RenovarSuscripcionPage.route,
+        builder: (context, state) {
+          return const RenovarSuscripcionPage();
+        },
       ),
     ],
   );

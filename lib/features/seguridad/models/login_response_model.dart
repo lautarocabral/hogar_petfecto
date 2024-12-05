@@ -24,12 +24,14 @@ class UsuarioResponseDto {
   final String personaDni;
   final Persona persona;
   final List<Grupo> grupos;
+  final List<int> hasToUpdateProfile;
 
   UsuarioResponseDto({
     required this.email,
     required this.personaDni,
     required this.persona,
     required this.grupos,
+    required this.hasToUpdateProfile,
   });
 
   factory UsuarioResponseDto.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class UsuarioResponseDto {
       personaDni: json['personaDni'],
       persona: Persona.fromJson(json['persona']),
       grupos: (json['grupos'] as List).map((i) => Grupo.fromJson(i)).toList(),
+      hasToUpdateProfile: json['hasToUpdateProfile'],
     );
   }
 
@@ -47,6 +50,7 @@ class UsuarioResponseDto {
       personaDni: '',
       persona: Persona.empty(),
       grupos: [],
+      hasToUpdateProfile: [],
     );
   }
 }
@@ -75,7 +79,8 @@ class Persona {
       telefono: json['telefono'],
       fechaNacimiento: DateTime.parse(json['fechaNacimiento']),
       localidad: Localidad.fromJson(json['localidad']),
-      perfiles: (json['perfiles'] as List).map((i) => Perfil.fromJson(i)).toList(),
+      perfiles:
+          (json['perfiles'] as List).map((i) => Perfil.fromJson(i)).toList(),
     );
   }
 
@@ -206,7 +211,8 @@ class Grupo {
     return Grupo(
       id: json['id'],
       descripcion: json['descripcion'],
-      permisos: (json['permisos'] as List).map((i) => Permiso.fromJson(i)).toList(),
+      permisos:
+          (json['permisos'] as List).map((i) => Permiso.fromJson(i)).toList(),
     );
   }
 

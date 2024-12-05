@@ -44,9 +44,24 @@ class _HomePageState extends ConsumerState<HomePage> {
   ) {
     final user = ref.watch(userStateNotifierProvider);
     print('User in home: $user');
-
     if (user == null) {
       return const Center(child: CircularProgressIndicator());
+    }
+    if (user.hasToUpdateProfile.isNotEmpty) {
+      switch (user.hasToUpdateProfile[0]) {
+        case 1: // tiene que completar adoptante porque le quiero dar el permiso 1
+          context.go(SignUpAdoptantePage.route);
+          break;
+        case 2: // tiene que completar cliente porque le quiero dar el permiso 2
+          context.go(SignUpClientPage.route);
+        case 3: // tiene que completar veterinaria porque le quiero dar el permiso 3
+          context.go(SignUpVeterinariaPage.route);
+          break;
+        case 5: // tiene que completar protectora porque le quiero dar el permiso 4
+          context.go(SignUpProtectoraPage.route);
+          break;
+        default:
+      }
     }
     return Scaffold(
       key: _scaffoldKey,

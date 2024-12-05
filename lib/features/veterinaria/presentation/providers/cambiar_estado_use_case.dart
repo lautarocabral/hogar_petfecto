@@ -1,16 +1,15 @@
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hogar_petfecto/core/network/api_response.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 
-final cambiarEstadoUseCaseProvider =
-    FutureProvider.family<void, Map<String, dynamic>>((ref, pedido) async {
+final cambiarEstadoUseCaseProvider = FutureProvider.autoDispose
+    .family<void, Map<String, dynamic>>((ref, body) async {
   final apiClient = ref.read(apiClientProvider);
 
   final response =
-      await apiClient.postData('Veterinarias/CambiarEstadoSuscripcion', pedido);
+      await apiClient.postData('Veterinarias/CambiarEstadoSuscripcion', body);
 
   final apiResponse = ApiResponse.fromJson(
     response.data,
@@ -22,6 +21,7 @@ final cambiarEstadoUseCaseProvider =
   }
 
   apiClient.setToken(apiResponse.result.token);
+
   ref
       .read(userStateNotifierProvider.notifier)
       .setUser(apiResponse.result.usuario);

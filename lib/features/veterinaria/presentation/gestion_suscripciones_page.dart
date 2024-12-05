@@ -6,6 +6,7 @@ import 'package:hogar_petfecto/features/home/screens/home_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/models/suscripcion_response_model.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/providers/cambiar_plan_use_case.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/providers/get_suscripcion_use_case.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/renovar_suscripcion_page.dart';
 import 'package:intl/intl.dart';
 
 class GestionSuscripcionesPage extends ConsumerStatefulWidget {
@@ -39,11 +40,22 @@ class _GestionSuscripcionesPageState
   @override
   Widget build(BuildContext context) {
     final suscripcionAsyncValue = ref.watch(getSuscripcionUseCaseProvider);
+    // Validar si la suscripción sigue activa
 
     return Scaffold(
         appBar: const CustomAppBarWidget(title: 'Gestionar Suscripción'),
         body: suscripcionAsyncValue.when(
           data: (suscripcionAsyncValue) {
+            bool isSubscribed = false;
+
+            if (suscripcionAsyncValue.suscripcion != null &&
+                suscripcionAsyncValue.suscripcion!.fechaFin != null) {
+              final fechaFin = DateTime.tryParse(
+                  suscripcionAsyncValue.suscripcion!.fechaFin!);
+              if (fechaFin != null) {
+                isSubscribed = fechaFin.isAfter(DateTime.now());
+              }
+            }
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
@@ -74,13 +86,19 @@ class _GestionSuscripcionesPageState
                               ),
 
                               const SizedBox(height: 16.0),
-
                               // Botón para cambiar plan
                               Center(
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    _cambiarPlan(context);
-                                  },
+                                  onPressed: (suscripcionAsyncValue
+                                                  .suscripcion!.tipoPlan ==
+                                              TipoPlan.anual &&
+                                          DateTime.parse(suscripcionAsyncValue
+                                                  .suscripcion!.fechaFin!)
+                                              .isBefore(DateTime.now()))
+                                      ? null
+                                      : () {
+                                          _cambiarPlan(context);
+                                        },
                                   style: ElevatedButton.styleFrom(
                                     minimumSize:
                                         const Size(double.infinity, 50),
@@ -88,10 +106,13 @@ class _GestionSuscripcionesPageState
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  child: const Text('Cambiar Plan',
-                                      style: TextStyle(fontSize: 18)),
+                                  child: const Text(
+                                    'Cambiar Plan',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
                                 ),
                               ),
+
                               const SizedBox(height: 16.0),
 
                               // Botón para cancelar suscripción
@@ -115,10 +136,19 @@ class _GestionSuscripcionesPageState
                             ],
                           )
                         : Center(
-                            child: Text(
-                              'No tienes una suscripción activa',
-                              style: TextStyle(
-                                  fontSize: 18, color: Colors.grey.shade600),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                context.push(RenovarSuscripcionPage.route);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: const Size(double.infinity, 50),
+                                backgroundColor: Colors.greenAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              child: const Text('Renovar Suscripción',
+                                  style: TextStyle(fontSize: 18)),
                             ),
                           ),
                     const SizedBox(height: 24.0),
@@ -225,12 +255,7 @@ class _GestionSuscripcionesPageState
                             // Refrescar la suscripción en el estado global
                             ref.invalidate(getSuscripcionUseCaseProvider);
 
-                            // Actualizar el estado global del widget principal
-                            setState(() {
-                              selectedPlan = tempSelectedPlan!;
-                            });
-
-                            Navigator.pop(context); // Cerrar el modal
+                            context.pop(); // Cerrar el modal
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                 content: Text('Plan actualizado con éxito'),
@@ -300,6 +325,5 @@ class _GestionSuscripcionesPageState
     );
   }
 }
-///////////////////////////////////////////////////////////////////
 
 enum SubscriptionPlan { Anual, Mensual }
