@@ -36,11 +36,14 @@ class UsuarioResponseDto {
 
   factory UsuarioResponseDto.fromJson(Map<String, dynamic> json) {
     return UsuarioResponseDto(
-      email: json['email'],
-      personaDni: json['personaDni'],
+      email: json['email'] ?? '',
+      personaDni: json['personaDni'] ?? '',
       persona: Persona.fromJson(json['persona']),
       grupos: (json['grupos'] as List).map((i) => Grupo.fromJson(i)).toList(),
-      hasToUpdateProfile: json['hasToUpdateProfile'],
+      hasToUpdateProfile: (json['hasToUpdateProfile'] as List<dynamic>?)
+              ?.map((i) => i as int)
+              .toList() ??
+          [],
     );
   }
 
@@ -54,6 +57,7 @@ class UsuarioResponseDto {
     );
   }
 }
+
 
 class Persona {
   final String razonSocial;

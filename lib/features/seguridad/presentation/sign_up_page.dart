@@ -32,7 +32,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
   ProvinciaDtos? selectedProvince;
   LocalidadDtos? selectedCity;
-  final _formKey = GlobalKey<FormState>();
+  final _formSignUpKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
-                key: _formKey,
+                key: _formSignUpKey,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -223,7 +223,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     Center(
                       child: ElevatedButton.icon(
                         onPressed: () async {
-                          if (_formKey.currentState?.validate() ?? false) {
+                          if (_formSignUpKey.currentState?.validate() ?? false) {
                             try {
                               final credentials = {
                                 'dni': dniController.text,
@@ -237,7 +237,7 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                               };
                               await ref
                                   .read(signUpProvider(credentials).future);
-                              _formKey.currentState?.reset();
+                              _formSignUpKey.currentState?.reset();
 
                               await ScaffoldMessenger.of(context)
                                   .showSnackBar(

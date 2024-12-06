@@ -162,7 +162,9 @@ class _EditarUsuarioPageState extends ConsumerState<EditarUsuarioPage> {
             const SizedBox(height: 8),
             listaGruposAsyncValue.when(
               data: (listaGrupos) {
-                final gruposDisponibles = listaGrupos.gruposDto ?? [];
+                final gruposDisponibles =
+                    listaGrupos.gruposDto ??
+                        [];
                 return Wrap(
                   spacing: 8.0,
                   children: gruposDisponibles.map((grupo) {

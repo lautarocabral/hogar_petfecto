@@ -28,6 +28,7 @@ import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart
 import 'package:hogar_petfecto/features/merchandising/presentation/oc_pdf_page.dart';
 import 'package:hogar_petfecto/features/seguridad/models/lista_usuarios_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_coordinator_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/alta_usuario_page.dart';
@@ -88,6 +89,14 @@ class AppRouter {
           return EditarUsuarioPage(
             usuario: usuario,
           );
+        },
+      ),
+      GoRoute(
+        path: ProfileCompletionCoordinatorPage.route,
+        builder: (context, state) {
+          final profilesToUpdate = state.extra as List<int>;
+          return ProfileCompletionCoordinatorPage(
+              permissionIds: profilesToUpdate);
         },
       ),
       GoRoute(

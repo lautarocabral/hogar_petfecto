@@ -75,8 +75,8 @@ class SignUpVeterinariaPageState extends State<SignUpVeterinariaPage> {
                         // Actualiza la ubicación seleccionada y el campo de dirección
                         setState(() {
                           selectedLocation = point;
-                          addressController.text =
-                              'Lat: ${point.latitude}, Lng: ${point.longitude}';
+                          // addressController.text =
+                          //     'Lat: ${point.latitude}, Lng: ${point.longitude}';
                         });
                       },
                     ),

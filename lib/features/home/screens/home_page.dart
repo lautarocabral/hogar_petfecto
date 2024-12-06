@@ -13,6 +13,7 @@ import 'package:hogar_petfecto/features/merchandising/presentation/historial_mer
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_completion_coordinator.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
@@ -47,22 +48,30 @@ class _HomePageState extends ConsumerState<HomePage> {
     if (user == null) {
       return const Center(child: CircularProgressIndicator());
     }
-    if (user.hasToUpdateProfile.isNotEmpty) {
-      switch (user.hasToUpdateProfile[0]) {
-        case 1: // tiene que completar adoptante porque le quiero dar el permiso 1
-          context.go(SignUpAdoptantePage.route);
-          break;
-        case 2: // tiene que completar cliente porque le quiero dar el permiso 2
-          context.go(SignUpClientPage.route);
-        case 3: // tiene que completar veterinaria porque le quiero dar el permiso 3
-          context.go(SignUpVeterinariaPage.route);
-          break;
-        case 5: // tiene que completar protectora porque le quiero dar el permiso 4
-          context.go(SignUpProtectoraPage.route);
-          break;
-        default:
-      }
-    }
+    // // Si necesita completar perfiles, redirigimos
+    // if (user.hasToUpdateProfile.isNotEmpty) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     switch (user.hasToUpdateProfile[0]) {
+    //       case 1:
+    //         context.go(SignUpAdoptantePage.route);
+    //         break;
+    //       case 2:
+    //         context.go(SignUpClientPage.route);
+    //         break;
+    //       case 3:
+    //         context.go(SignUpVeterinariaPage.route);
+    //         break;
+    //       case 5:
+    //         context.go(SignUpProtectoraPage.route);
+    //         break;
+    //       default:
+    //       // Manejo de casos no previstos
+    //     }
+    //   });
+    // }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ProfileCompletionCoordinator.handleProfileCompletion(context, user);
+    });
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -122,8 +131,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 2)))
-                const Gap(10),
+                const Gap(5),
               // MERCHANDISING
+              if (user.grupos.any(
+                  (grupo) => grupo.permisos.any((permiso) => permiso.id == 2)))
+                const Gap(5),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 2)))
                 buildBannerButton(
@@ -134,9 +146,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                     context.push(ListadoProductosPage.route);
                   },
                 ),
+              const Gap(5),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 4)))
-                const Gap(10),
+                const Gap(5),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 4)))
                 buildBannerButton(
@@ -147,9 +160,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                     context.push(ListaProductosPage.route);
                   },
                 ),
+              const Gap(5),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
-                const Gap(10),
+                const Gap(5),
               // VETERINARIA
               if (!user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
@@ -161,10 +175,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                     context.push(VeterinariaMapPage.route);
                   },
                 ),
-
+              const Gap(5),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
-                const Gap(10),
+                const Gap(5),
               if (user.grupos.any(
                   (grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
                 buildBannerButton(
@@ -175,9 +189,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     context.push(VeterinariaFacilitiesEditPage.route);
                   },
                 ),
-              // const Gap(10),
               if (user.grupos.any((grupo) => grupo.id == 2)) buildGuestCard(),
-              const Gap(10),
+              const Gap(5),
               buildBannerButton(context, 'Generar QR', Icons.qr_code, () {
                 context.push(QrCodePage.route);
               }),
@@ -436,14 +449,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                 context.push(GestionPostulacionesProtectoraPage.route);
               },
             ),
-          if (user.grupos
-              .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 2)))
-            ListTile(
-              title: const Text('Mis Compras'),
-              onTap: () {
-                context.push(HistorialComprasPage.route);
-              },
-            ),
+          // if (user.grupos
+          //     .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 2)))
+          //   ListTile(
+          //     title: const Text('Mis Compras'),
+          //     onTap: () {
+          //       context.push(HistorialComprasPage.route);
+          //     },
+          //   ),
           if (user.grupos
               .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 4)))
             ListTile(

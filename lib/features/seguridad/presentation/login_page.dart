@@ -8,8 +8,10 @@ import 'package:hogar_petfecto/core/app_dimens.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_coordinator_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/auth_provider.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 import 'package:permission_handler/permission_handler.dart'; // Importa tu GenericState
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -144,8 +146,17 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
                     try {
                       await ref.read(loginProvider(credentials).future);
+
+                      var user = ref.read(userStateNotifierProvider);
                       if (mounted) {
-                        context.pushReplacement('/home');
+                        if (user!.hasToUpdateProfile.isNotEmpty) {
+                          context.pushReplacement(
+                            ProfileCompletionCoordinatorPage.route,
+                            extra: user.hasToUpdateProfile,
+                          );
+                        } else {
+                          context.pushReplacement('/home');
+                        }
                       }
                     } on DioException catch (e) {
                       // Display the error message for non-401 errors

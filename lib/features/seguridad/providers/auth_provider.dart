@@ -10,21 +10,7 @@ final loginProvider =
   final apiClient = ref.read(apiClientProvider);
 
   try {
-    // ref
-    //     .read(userStateNotifierProvider.notifier)
-    //     .resetUser();
     final response = await apiClient.postData('auth/login', credentials);
-
-    // Check if the statusCode in the response is not 200
-    // final statusCode = response.data['statusCode'] ?? 200;
-    // final message = response.data['message'] ?? 'Unknown error';
-
-    // // if (statusCode != 200) {
-    // //   throw DioException(
-    // //     requestOptions: response.requestOptions,
-    // //     error: message,
-    // //   );
-    // // }
 
     final apiResponse = ApiResponse.fromJson(
       response.data,
