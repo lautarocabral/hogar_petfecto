@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
+import 'package:hogar_petfecto/features/seguridad/models/lista_usuarios_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/editar_usuario_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/modulo_seguridad_use_case.dart';
 
@@ -16,14 +17,14 @@ class ListaUsuariosPage extends ConsumerStatefulWidget {
 }
 
 class _ListaUsuariosPageState extends ConsumerState<ListaUsuariosPage> {
-  void _confirmarEliminarUsuario(BuildContext context, int userIndex) {
+  void _confirmarEliminarUsuario(BuildContext context, UsuarioDtos asuarioDto) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirmar eliminación'),
           content: Text(
-              '¿Estás seguro de que deseas eliminar al usuario $userIndex?'),
+              '¿Estás seguro de que deseas eliminar al usuario ${asuarioDto.persona?.razonSocial ?? ''}?'),
           actions: [
             TextButton(
               child: const Text('Cancelar'),
@@ -34,9 +35,14 @@ class _ListaUsuariosPageState extends ConsumerState<ListaUsuariosPage> {
             TextButton(
               child:
                   const Text('Eliminar', style: TextStyle(color: Colors.red)),
-              onPressed: () {
-                // Acción para eliminar el usuario
-                Navigator.of(context).pop();
+              onPressed: () async {
+                await ref
+                    .read(deleteUserUseCaseProvider(asuarioDto.persona!.dni!));
+
+                if (mounted) {
+                  context.pop();
+                  ref.invalidate(listaUsuariosUseCaseProvider);
+                }
               },
             ),
           ],
@@ -105,7 +111,8 @@ class _ListaUsuariosPageState extends ConsumerState<ListaUsuariosPage> {
                                         color: Colors.red),
                                     onPressed: () {
                                       // Confirmación y acción de eliminar usuario
-                                      _confirmarEliminarUsuario(context, index);
+                                      _confirmarEliminarUsuario(
+                                          context, usuario);
                                     },
                                   ),
                                 ],

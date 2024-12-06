@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hogar_petfecto/core/network/api_response.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
@@ -5,6 +6,7 @@ import 'package:hogar_petfecto/features/seguridad/models/lista_grupos_response_m
 import 'package:hogar_petfecto/features/seguridad/models/lista_permisos_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/lista_usuarios_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 
 final listaUsuariosUseCaseProvider =
     FutureProvider.autoDispose<ListaUsuariosResponseModel>((ref) async {
@@ -86,3 +88,25 @@ final editarUsuarioUseCaseProvider =
     }
   },
 );
+
+final deleteUserUseCaseProvider =
+    FutureProvider.autoDispose.family<void, String>((ref, credentials) async {
+  final apiClient = ref.read(apiClientProvider);
+
+  try {
+    final response = await apiClient.getData('Auth/DeleteUsuario/$credentials');
+
+    final apiResponse = ApiResponse.fromJson(
+      response.data,
+      (result) => UserResponse.fromJson(result),
+    );
+
+    // Set token and user in the state
+    apiClient.setToken(apiResponse.result.token);
+    // ref
+    //     .read(userStateNotifierProvider.notifier)
+    //     .setUser(apiResponse.result.usuario);
+  } on DioException catch (e) {
+    throw Exception('Error al procesar la solicitud: $e');
+  }
+});
