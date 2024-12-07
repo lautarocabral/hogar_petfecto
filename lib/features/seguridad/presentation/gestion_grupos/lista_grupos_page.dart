@@ -154,7 +154,7 @@ class _ListaGruposPageState extends ConsumerState<ListaGruposPage> {
                 style: TextStyle(color: Colors.red),
               ),
               onPressed: () async {
-                await ref.read(eliminarGrupoUseCaseProvider(role.id!));
+                await ref.read(eliminarGrupoUseCaseProvider(role.id!).future);
                 ref.invalidate(listaGruposUseCaseProvider);
                
                 context.pop();

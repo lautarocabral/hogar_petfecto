@@ -37,7 +37,7 @@ class _ListaUsuariosPageState extends ConsumerState<ListaUsuariosPage> {
                   const Text('Eliminar', style: TextStyle(color: Colors.red)),
               onPressed: () async {
                 await ref
-                    .read(deleteUserUseCaseProvider(asuarioDto.persona!.dni!));
+                    .read(deleteUserUseCaseProvider(asuarioDto.persona!.dni!).future);
 
                 if (mounted) {
                   ref.invalidate(listaUsuariosUseCaseProvider);
