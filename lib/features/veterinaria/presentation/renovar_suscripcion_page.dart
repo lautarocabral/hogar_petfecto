@@ -48,7 +48,7 @@ class _RenovarSuscripcionPageState
     try {
       final credentials = {
         'suscripcionId': 1,
-        'tipoPlan': selectedPlan,
+        'tipoPlan': selectedPlan.index,
         'estado': true
       };
 
