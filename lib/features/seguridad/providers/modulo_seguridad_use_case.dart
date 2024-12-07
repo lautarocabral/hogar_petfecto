@@ -175,3 +175,18 @@ final eliminarGrupoUseCaseProvider =
   //     .read(userStateNotifierProvider.notifier)
   //     .setUser(apiResponse.result.usuario);
 });
+
+final recuperarClaveUseCaseProvider =
+    FutureProvider.family<void, Map<String, dynamic>>((ref, credentials) async {
+  final apiClient = ref.read(apiClientProvider);
+  final response = await apiClient.postData('Auth/RecuprarClave', credentials);
+
+  final apiResponse = ApiResponse.fromJson(
+    response.data,
+    (result) => String,
+  );
+
+  if (apiResponse.statusCode != 200) {
+    throw Exception(apiResponse.message);
+  }
+});

@@ -37,12 +37,14 @@ import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/editar_usuario_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/recuperar_clave.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_client_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/models/veterinaria_response_model.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
@@ -93,7 +95,7 @@ class AppRouter {
           );
         },
       ),
-       GoRoute(
+      GoRoute(
         path: EditarGrupoPage.route,
         builder: (context, state) {
           final grupo = state.extra as GruposDto;
@@ -109,6 +111,10 @@ class AppRouter {
           return ProfileCompletionCoordinatorPage(
               permissionIds: profilesToUpdate);
         },
+      ),
+      GoRoute(
+        path: RecuperarClave.route,
+        builder: (context, state) => const RecuperarClave(),
       ),
       GoRoute(
         path: SignUpAdoptantePage.route,
@@ -300,19 +306,14 @@ class AppRouter {
       GoRoute(
         path: VeterinariaDescripcionPage.route,
         builder: (context, state) {
-          // Cast seguro de state.extra a Map<String, String>
-          final extraData = state.extra as Map<String, String>?;
-
-          final veterinariaNombre = extraData?['nombre'] ?? 'Sin nombre';
-          final veterinariaDescripcion =
-              extraData?['descripcion'] ?? 'Sin descripción';
+          final veterinaria = state.extra as Veterinarias?;
 
           return VeterinariaDescripcionPage(
-            veterinariaNombre: veterinariaNombre,
-            veterinariaDescripcion: veterinariaDescripcion,
+            veterinaria: veterinaria!,
           );
         },
       ),
+
       GoRoute(
         path: QrScannerPage.route,
         builder: (context, state) => const QrScannerPage(),

@@ -3,9 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart';
-import 'package:hogar_petfecto/features/veterinaria/presentation/models/suscripcion_response_model.dart';
-import 'package:hogar_petfecto/features/veterinaria/presentation/providers/cambiar_plan_use_case.dart';
-import 'package:hogar_petfecto/features/veterinaria/presentation/providers/get_suscripcion_use_case.dart';
+import 'package:hogar_petfecto/features/veterinaria/models/suscripcion_response_model.dart';
+import 'package:hogar_petfecto/features/veterinaria/providers/cambiar_plan_use_case.dart';
+import 'package:hogar_petfecto/features/veterinaria/providers/get_suscripcion_use_case.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/renovar_suscripcion_page.dart';
 import 'package:intl/intl.dart';
 

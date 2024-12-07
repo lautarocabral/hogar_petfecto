@@ -1,14 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hogar_petfecto/core/network/api_response.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
-import 'package:hogar_petfecto/features/veterinaria/presentation/models/suscripcion_response_model.dart';
+import 'package:hogar_petfecto/features/veterinaria/models/suscripcion_response_model.dart';
 
 final getSuscripcionUseCaseProvider =
     FutureProvider.autoDispose<SuscripcionResponseModel>((ref) async {
   final apiClient = ref.read(apiClientProvider);
 
   try {
-    final response = await apiClient.getData('Veterinarias/GetMisSuscripciones');
+    final response =
+        await apiClient.getData('Veterinarias/GetMisSuscripciones');
 
     final apiResponse = ApiResponse<SuscripcionResponseModel>.fromJson(
       response.data,
@@ -16,7 +17,8 @@ final getSuscripcionUseCaseProvider =
     );
 
     if (apiResponse.statusCode != 200) {
-      throw Exception(apiResponse.message ?? 'Error desconocido en el servidor');
+      throw Exception(
+          apiResponse.message ?? 'Error desconocido en el servidor');
     }
 
     final token = apiResponse.result?.token;
@@ -31,4 +33,3 @@ final getSuscripcionUseCaseProvider =
     throw Exception('Error al obtener las suscripciones: ${e.toString()}');
   }
 });
-

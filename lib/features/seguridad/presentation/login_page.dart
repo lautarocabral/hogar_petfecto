@@ -9,6 +9,7 @@ import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/core/widgets/custom_button_widget.dart';
 import 'package:hogar_petfecto/core/widgets/custom_text_field_widget.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_coordinator_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/recuperar_clave.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/auth_provider.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
@@ -119,6 +120,25 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 textInputAction: TextInputAction.done,
                 focusNode: _passwordFocusNode,
                 validator: _passwordValidator,
+              ),
+              const SizedBox(height: 5 ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      context.push(RecuperarClave.route);
+                    },
+                    child: const Text(
+                      'Recuperar clave',
+                      style: TextStyle(
+                        fontSize: 15,
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 20),
               GestureDetector(

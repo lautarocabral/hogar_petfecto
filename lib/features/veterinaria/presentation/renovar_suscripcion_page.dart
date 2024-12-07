@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/providers/api_client_provider.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/home/screens/home_page.dart';
-import 'package:hogar_petfecto/features/veterinaria/presentation/providers/cambiar_estado_use_case.dart';
+import 'package:hogar_petfecto/features/veterinaria/providers/cambiar_estado_use_case.dart';
 
 enum SubscriptionPlan { Anual, Mensual }
 
