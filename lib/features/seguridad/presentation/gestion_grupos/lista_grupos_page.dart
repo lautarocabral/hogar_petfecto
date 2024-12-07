@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
 import 'package:hogar_petfecto/features/seguridad/models/lista_grupos_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/editar_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/modulo_seguridad_use_case.dart';
 
 class ListaGruposPage extends ConsumerStatefulWidget {
@@ -87,6 +88,8 @@ class _ListaGruposPageState extends ConsumerState<ListaGruposPage> {
                                     ),
                                     onPressed: () {
                                       // Acción para editar el rol
+                                      context.push(EditarGrupoPage.route,
+                                          extra: role);
                                     },
                                   ),
                                   IconButton(
@@ -96,8 +99,7 @@ class _ListaGruposPageState extends ConsumerState<ListaGruposPage> {
                                     ),
                                     onPressed: () {
                                       // Confirmación y acción de eliminar rol
-                                      _confirmarEliminarRol(
-                                          context, role);
+                                      _confirmarEliminarRol(context, role);
                                     },
                                   ),
                                 ],
@@ -119,16 +121,16 @@ class _ListaGruposPageState extends ConsumerState<ListaGruposPage> {
           child: Text('Error al cargar provincias: $error'),
         ),
       ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   onPressed: () {
-      //     context.push(AltaGrupoPage.route);
-      //   },
-      //   backgroundColor: Colors.blueAccent,
-      //   foregroundColor: Colors.white,
-      //   icon: const Icon(Icons.add),
-      //   label: const Text('Agregar Grupo'),
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          context.push(AltaGrupoPage.route);
+        },
+        backgroundColor: Colors.blueAccent,
+        foregroundColor: Colors.white,
+        icon: const Icon(Icons.add),
+        label: const Text('Agregar Grupo'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -143,7 +145,7 @@ class _ListaGruposPageState extends ConsumerState<ListaGruposPage> {
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
             TextButton(
@@ -151,9 +153,11 @@ class _ListaGruposPageState extends ConsumerState<ListaGruposPage> {
                 'Eliminar',
                 style: TextStyle(color: Colors.red),
               ),
-              onPressed: () {
-                // Acción para eliminar el rol
-                Navigator.of(context).pop();
+              onPressed: () async {
+                await ref.read(eliminarGrupoUseCaseProvider(role.id!));
+                ref.invalidate(listaGruposUseCaseProvider);
+               
+                context.pop();
               },
             ),
           ],

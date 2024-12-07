@@ -89,7 +89,11 @@ class _EditarUsuarioPageState extends ConsumerState<EditarUsuarioPage> {
       'dni': widget.usuario.personaDni,
     };
 
-    await ref.read(editarUsuarioUseCaseProvider(credentials));
+    await ref.read(editarUsuarioUseCaseProvider(credentials).future);
+
+    ref.invalidate(listaUsuariosUseCaseProvider);
+
+    context.pop();
   }
 
   @override
@@ -162,9 +166,7 @@ class _EditarUsuarioPageState extends ConsumerState<EditarUsuarioPage> {
             const SizedBox(height: 8),
             listaGruposAsyncValue.when(
               data: (listaGrupos) {
-                final gruposDisponibles =
-                    listaGrupos.gruposDto ??
-                        [];
+                final gruposDisponibles = listaGrupos.gruposDto ?? [];
                 return Wrap(
                   spacing: 8.0,
                   children: gruposDisponibles.map((grupo) {

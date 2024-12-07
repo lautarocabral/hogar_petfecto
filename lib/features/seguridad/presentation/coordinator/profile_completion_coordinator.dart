@@ -10,7 +10,7 @@ class ProfileCompletionCoordinator {
     UsuarioResponseDto user,
   ) {
     if (user.hasToUpdateProfile.isEmpty) {
-      context.pushReplacement(HomePage.route);
+      context.push('/home');
     } else {
       context.pushReplacement(
         ProfileCompletionCoordinatorPage.route,

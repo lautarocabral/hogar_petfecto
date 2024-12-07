@@ -110,3 +110,68 @@ final deleteUserUseCaseProvider =
     throw Exception('Error al procesar la solicitud: $e');
   }
 });
+
+final editarGrupoUseCaseProvider =
+    FutureProvider.autoDispose.family<void, Map<String, dynamic>>(
+  (ref, credentials) async {
+    final apiClient = ref.read(apiClientProvider);
+
+    try {
+      final response =
+          await apiClient.postData('Auth/EditarGrupo', credentials);
+
+      final apiResponse = ApiResponse.fromJson(
+        response.data,
+        (result) => UserResponse.fromJson(result),
+      );
+
+      if (apiResponse.statusCode != 200) {
+        throw Exception(apiResponse.message);
+      }
+
+      apiClient.setToken(apiResponse.result.token);
+
+      return;
+    } catch (error) {
+      throw Exception('Error al procesar la solicitud: $error');
+    }
+  },
+);
+
+final addGrupoUseCaseProvider =
+    FutureProvider.family<void, Map<String, dynamic>>((ref, credentials) async {
+  final apiClient = ref.read(apiClientProvider);
+  final response = await apiClient.postData('Auth/AgregarGrupo', credentials);
+
+  final apiResponse = ApiResponse.fromJson(
+    response.data,
+    (result) => UserResponse.fromJson(result),
+  );
+
+  if (apiResponse.statusCode != 200) {
+    throw Exception(apiResponse.message);
+  }
+  apiClient.setToken(apiResponse.result.token);
+  ref
+      .read(userStateNotifierProvider.notifier)
+      .setUser(apiResponse.result.usuario);
+});
+
+final eliminarGrupoUseCaseProvider =
+    FutureProvider.family<void, int>((ref, credentials) async {
+  final apiClient = ref.read(apiClientProvider);
+  final response = await apiClient.getData('Auth/DeleteGrupo/$credentials');
+
+  final apiResponse = ApiResponse.fromJson(
+    response.data,
+    (result) => UserResponse.fromJson(result),
+  );
+
+  if (apiResponse.statusCode != 200) {
+    throw Exception(apiResponse.message);
+  }
+  apiClient.setToken(apiResponse.result.token);
+  // ref
+  //     .read(userStateNotifierProvider.notifier)
+  //     .setUser(apiResponse.result.usuario);
+});

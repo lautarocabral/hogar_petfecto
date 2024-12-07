@@ -26,10 +26,12 @@ import 'package:hogar_petfecto/features/merchandising/presentation/historial_mer
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/carga_mascota.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/oc_pdf_page.dart';
+import 'package:hogar_petfecto/features/seguridad/models/lista_grupos_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/lista_usuarios_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_coordinator_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/editar_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/alta_usuario_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/editar_usuario_page.dart';
@@ -88,6 +90,15 @@ class AppRouter {
           final usuario = state.extra as UsuarioDtos;
           return EditarUsuarioPage(
             usuario: usuario,
+          );
+        },
+      ),
+       GoRoute(
+        path: EditarGrupoPage.route,
+        builder: (context, state) {
+          final grupo = state.extra as GruposDto;
+          return EditarGrupoPage(
+            grupo: grupo,
           );
         },
       ),

@@ -40,8 +40,9 @@ class _ListaUsuariosPageState extends ConsumerState<ListaUsuariosPage> {
                     .read(deleteUserUseCaseProvider(asuarioDto.persona!.dni!));
 
                 if (mounted) {
-                  context.pop();
                   ref.invalidate(listaUsuariosUseCaseProvider);
+                  await Future.delayed(Duration(milliseconds: 100));
+                  context.pop();
                 }
               },
             ),

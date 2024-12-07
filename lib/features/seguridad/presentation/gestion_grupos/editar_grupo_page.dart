@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
+import 'package:hogar_petfecto/features/seguridad/models/lista_grupos_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/lista_permisos_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/modulo_seguridad_use_case.dart';
 
-class AltaGrupoPage extends ConsumerStatefulWidget {
-  static const String route = '/alta-grupo';
+class EditarGrupoPage extends ConsumerStatefulWidget {
+  final GruposDto grupo;
+  static const String route = '/editar-grupo';
 
-  const AltaGrupoPage({
-    Key? key,
-  }) : super(key: key);
+  const EditarGrupoPage({Key? key, required this.grupo}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => AltaGrupoPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EditarGrupoPageState();
 }
 
-class AltaGrupoPageState extends ConsumerState<AltaGrupoPage> {
+class _EditarGrupoPageState extends ConsumerState<EditarGrupoPage> {
   late List<PermisosDto> permisosDisponibles = [];
   late List<int> permisosSeleccionados = [];
-  late final TextEditingController grupoNombreController =
-      TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -28,36 +28,41 @@ class AltaGrupoPageState extends ConsumerState<AltaGrupoPage> {
   }
 
   Future<void> _cargarPermisos() async {
+    // Lógica para cargar la lista de permisos disponibles y los actuales
     final permisosResponse =
         await ref.read(listaPermisosUseCaseProvider.future);
     setState(() {
       permisosDisponibles = permisosResponse.permisosDto ?? [];
+      permisosSeleccionados =
+          widget.grupo.permisos?.map((p) => p.id!).toList() ?? [];
     });
   }
 
   Future<void> _guardarCambios() async {
     try {
-      if (grupoNombreController.text.isNotEmpty) {
-        final credentials = {
-          'grupoId': 1,
-          'permisosId': permisosSeleccionados,
-          'grupoNombre': grupoNombreController.text,
-        };
+      final permisosActualizados = permisosSeleccionados
+          .map((id) => permisosDisponibles.firstWhere((p) => p.id == id))
+          .toList();
 
-        await ref.read(addGrupoUseCaseProvider(credentials).future);
+      final credentials = {
+        'grupoId': widget.grupo.id,
+        'permisosId': permisosSeleccionados,
+        'grupoNombre': '',
+      };
 
-        ref.invalidate(listaGruposUseCaseProvider);
-       
+      await ref.read(editarGrupoUseCaseProvider(credentials).future);
+      ref.invalidate(listaGruposUseCaseProvider);
+      await ref.refresh(listaGruposUseCaseProvider.future);
 
-        context.pop();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Debe completar el nombre del grupo'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Permisos actualizados con éxito'),
+          backgroundColor: Colors.green,
+        ),
+      );
+      await Future.delayed(Duration(milliseconds: 100));
+     
+      context.pop(); // Vuelve a la pantalla anterior
     } catch (error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -71,22 +76,16 @@ class AltaGrupoPageState extends ConsumerState<AltaGrupoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBarWidget(title: 'Crear Grupo'),
+      appBar: CustomAppBarWidget(title: 'Editar Permisos'),
       body: permisosDisponibles.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 children: [
-                  TextField(
-                    controller: grupoNombreController,
-                    decoration: InputDecoration(
-                      labelText: 'Nombre del grupo',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                    ),
-                    obscureText: false,
+                  Text(
+                    'Permisos para el grupo: ${widget.grupo.descripcion}',
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
                   Expanded(

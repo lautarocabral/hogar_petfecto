@@ -69,9 +69,9 @@ class _HomePageState extends ConsumerState<HomePage> {
     //     }
     //   });
     // }
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ProfileCompletionCoordinator.handleProfileCompletion(context, user);
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   ProfileCompletionCoordinator.handleProfileCompletion(context, user);
+    // });
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
