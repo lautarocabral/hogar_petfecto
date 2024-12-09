@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
@@ -70,70 +72,121 @@ class VeterinariaDescripcionPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 12.0),
                     ...veterinaria.ofertas!.map(
-                      (oferta) => Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        elevation: 4,
-                        margin: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: ListTile(
-                          leading: oferta.imagen != null
-                              ? ClipRRect(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  child: Image.network(
-                                    oferta.imagen!,
-                                    width: 60,
-                                    height: 60,
-                                    fit: BoxFit.cover,
+                      (oferta) {
+                        final imageBytes = oferta.imagen != null
+                            ? base64Decode(oferta.imagen!)
+                            : null;
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            leading: oferta.imagen != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    child: CircleAvatar(
+                                      radius: 30,
+                                      backgroundImage: imageBytes != null
+                                          ? MemoryImage(imageBytes)
+                                          : null,
+                                      child: imageBytes == null
+                                          ? const Icon(Icons.pets, size: 30)
+                                          : null,
+                                    ))
+                                : const Icon(
+                                    Icons.local_offer,
+                                    size: 50,
+                                    color: Colors.blueAccent,
                                   ),
-                                )
-                              : const Icon(
-                                  Icons.local_offer,
-                                  size: 50,
-                                  color: Colors.blueAccent,
+                            title: Text(
+                              oferta.titulo ?? 'Oferta sin título',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              oferta.descripcion ?? 'Sin descripción',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black54,
+                              ),
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${oferta.descuento ?? 0}%',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
                                 ),
-                          title: Text(
-                            oferta.titulo ?? 'Oferta sin título',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                                const Text(
+                                  'Desc.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          subtitle: Text(
-                            oferta.descripcion ?? 'Sin descripción',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.black54,
-                            ),
-                          ),
-                          trailing: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                '${oferta.descuento ?? 0}%',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.green,
-                                ),
-                              ),
-                              const Text(
-                                'Desc.',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
                   ],
                 ),
-
               const SizedBox(height: 24.0),
-
+              // Servicios
+              if (veterinaria.servicios != null &&
+                  veterinaria.servicios!.isNotEmpty)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Servicios que brinda:',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueAccent,
+                      ),
+                    ),
+                    const SizedBox(height: 12.0),
+                    ...veterinaria.servicios!.map(
+                      (servicios) {
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          elevation: 4,
+                          margin: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: ListTile(
+                            title: Text(
+                              servicios.servicioNombre ?? 'Servicio sin título',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              servicios.servicioDescripcion ??
+                                  'Sin descripción',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black54,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 24.0),
               // Contacto
               if (veterinaria.telefono != null &&
                   veterinaria.telefono!.isNotEmpty)
@@ -161,8 +214,12 @@ class VeterinariaDescripcionPage extends StatelessWidget {
                     onPressed: () {
                       context.pop();
                     },
-                    icon: const Icon(Icons.map, color: Colors.white,),
-                    label: const Text('Ver en Mapa',style: TextStyle(color: Colors.white)),
+                    icon: const Icon(
+                      Icons.map,
+                      color: Colors.white,
+                    ),
+                    label: const Text('Ver en Mapa',
+                        style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       padding: const EdgeInsets.symmetric(
@@ -175,8 +232,14 @@ class VeterinariaDescripcionPage extends StatelessWidget {
                     onPressed: () {
                       // Lógica para llamar
                     },
-                    icon: const Icon(Icons.call, color: Colors.white,),
-                    label: const Text('Llamar', style: TextStyle(color: Colors.white),),
+                    icon: const Icon(
+                      Icons.call,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      'Llamar',
+                      style: TextStyle(color: Colors.white),
+                    ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green,
                       padding: const EdgeInsets.symmetric(

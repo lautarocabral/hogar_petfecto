@@ -323,10 +323,7 @@ class AppRouter {
       ),
       GoRoute(
         path: VeterinariaFacilitiesEditPage.route,
-        builder: (context, state) => VeterinariaFacilitiesEditPage(
-          veterinaria: Veterinaria(
-              id: 1, instalaciones: ['Sala de espera', 'Consultorios']),
-        ),
+        builder: (context, state) =>const VeterinariaFacilitiesEditPage(),
       ),
       GoRoute(
         path: QrCodePage.route,
@@ -354,7 +351,7 @@ class AppRouter {
           return const ReportePage();
         },
       ),
-        GoRoute(
+      GoRoute(
         path: OfertasPage.route,
         builder: (context, state) {
           return const OfertasPage();

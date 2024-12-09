@@ -1,143 +1,187 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hogar_petfecto/features/veterinaria/models/servicios_response_model.dart';
+import 'package:hogar_petfecto/features/veterinaria/providers/servicios_use_case.dart';
 
-class Veterinaria {
-  final int id;
-  List<String> instalaciones;
+class VeterinariaFacilitiesEditPage extends ConsumerStatefulWidget {
+  const VeterinariaFacilitiesEditPage({super.key});
 
-  Veterinaria({
-    required this.id,
-    required this.instalaciones,
-  });
-}
-
-class VeterinariaFacilitiesEditPage extends StatefulWidget {
-  final Veterinaria veterinaria;
-
-  const VeterinariaFacilitiesEditPage({required this.veterinaria, super.key});
-
-  static const String route = '/veterinaria_facilities_edit';
+  static const String route = '/veterinaria_servicios_edit';
 
   @override
-  VeterinariaFacilitiesEditPageState createState() =>
-      VeterinariaFacilitiesEditPageState();
+  ConsumerState<VeterinariaFacilitiesEditPage> createState() =>
+      _VeterinariaFacilitiesEditPageState();
 }
 
-class VeterinariaFacilitiesEditPageState
-    extends State<VeterinariaFacilitiesEditPage> {
-  bool _isEditing = false;
-  late List<String> _instalacionesSeleccionadas;
-
-  List<String> todasLasInstalaciones = [
-    'Sala de espera',
-    'Área de cirugía',
-    'Consultorios',
-    'Rayos X',
-    'Área de internación'
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _instalacionesSeleccionadas = List.from(widget.veterinaria.instalaciones);
-  }
-
+class _VeterinariaFacilitiesEditPageState
+    extends ConsumerState<VeterinariaFacilitiesEditPage> {
   @override
   Widget build(BuildContext context) {
+    final serviciosAsyncValue = ref.watch(serviciosUseCaseProvider);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          _isEditing
-              ? 'Editar Instalaciones'
-              : 'Instalaciones de la Veterinaria',
+          'Servicios de la Veterinaria',
           style: GoogleFonts.lato(
             textStyle: Theme.of(context).textTheme.titleLarge,
           ),
         ),
-        // backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
-            icon: Icon(_isEditing ? Icons.save : Icons.edit),
-            onPressed: _isEditing ? _guardarInstalaciones : _toggleEditMode,
+            icon: const Icon(Icons.add),
+            onPressed: () => _showAddOrEditDialog(context),
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Instalaciones de la Veterinaria',
-              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 20.0),
-
-            // Mostrar las instalaciones actuales o en modo de edición
-            _isEditing ? _buildInstalacionesEdit() : _buildInstalacionesView(),
-
-            const Spacer(),
-          ],
-        ),
+      body: serviciosAsyncValue.when(
+        data: (servicios) => _buildServiciosList(context, servicios.servicios!),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) =>
+            Center(child: Text('Error al cargar servicios: $error')),
       ),
     );
   }
 
-  // Modo de visualización de las instalaciones
-  Widget _buildInstalacionesView() {
-    if (_instalacionesSeleccionadas.isEmpty) {
-      return const Text('No se han registrado instalaciones aún.');
-    }
+  Widget _buildServiciosList(BuildContext context, List<Servicios> servicios) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: _instalacionesSeleccionadas.map((instalacion) {
-        return ListTile(
-          leading: const Icon(Icons.check, color: Colors.green),
-          title: Text(instalacion),
-        );
-      }).toList(),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Text(
+            'Gestiona los servicios de tu veterinaria: ¡Agrega y edita los servicios que ofreces para atraer a más clientes y destacar tus especialidades!',
+            style: GoogleFonts.lato(
+              textStyle: const TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            textAlign: TextAlign.start,
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16.0),
+            itemCount: servicios.length,
+            itemBuilder: (context, index) {
+              final servicio = servicios[index];
+              return Card(
+                elevation: 2,
+                margin: const EdgeInsets.only(bottom: 10),
+                child: ListTile(
+                  title: Text(
+                    servicio.servicioNombre ?? '',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  subtitle: Text(servicio.servicioDescripcion ?? ''),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () =>
+                            _showAddOrEditDialog(context, servicio: servicio),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () => _deleteServicio(servicio: servicio),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  // Modo de edición de las instalaciones
-  Widget _buildInstalacionesEdit() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: todasLasInstalaciones.map((instalacion) {
-        return CheckboxListTile(
-          title: Text(instalacion),
-          value: _instalacionesSeleccionadas.contains(instalacion),
-          onChanged: (bool? selected) {
-            setState(() {
-              if (selected == true) {
-                _instalacionesSeleccionadas.add(instalacion);
-              } else {
-                _instalacionesSeleccionadas.remove(instalacion);
-              }
-            });
-          },
-        );
-      }).toList(),
-    );
-  }
-
-  // Alternar entre modo de edición y visualización
-  void _toggleEditMode() {
-    setState(() {
-      _isEditing = !_isEditing;
-    });
-  }
-
-  // Guardar las instalaciones seleccionadas
-  void _guardarInstalaciones() {
-    setState(() {
-      widget.veterinaria.instalaciones = List.from(_instalacionesSeleccionadas);
-      _isEditing = false;
-    });
-
-    // Mostrar mensaje de éxito
+  Future<void> _deleteServicio({Servicios? servicio}) async {
+    await ref.read(deleteServicioUseCaseProvider(servicio!.id!).future);
+    ref.invalidate(serviciosUseCaseProvider);
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Instalaciones actualizadas')),
+      SnackBar(
+        content: Text('Servicio eliminado con exito'),
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  void _showAddOrEditDialog(BuildContext context, {Servicios? servicio}) {
+    final isEdit = servicio != null;
+    final nombreController =
+        TextEditingController(text: isEdit ? servicio!.servicioNombre : '');
+    final descripcionController = TextEditingController(
+        text: isEdit ? servicio!.servicioDescripcion : '');
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(isEdit ? 'Editar Servicio' : 'Agregar Servicio'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: nombreController,
+                  decoration: const InputDecoration(labelText: 'Nombre'),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: descripcionController,
+                  decoration: const InputDecoration(labelText: 'Descripción'),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () async {
+                if (nombreController.text.isNotEmpty &&
+                    descripcionController.text.isNotEmpty) {
+                  if (isEdit) {
+                    final credentials = {
+                      'servicioNombre': nombreController.text,
+                      'servicioDescripcion': descripcionController.text,
+                      'servicioId': servicio.id
+                    };
+                    await ref
+                        .read(addServicioUseCaseProvider(credentials).future);
+                    ref.invalidate(serviciosUseCaseProvider);
+                  } else {
+                    final credentials = {
+                      'servicioNombre': nombreController.text,
+                      'servicioDescripcion': descripcionController.text,
+                    };
+                    await ref
+                        .read(addServicioUseCaseProvider(credentials).future);
+                    ref.invalidate(serviciosUseCaseProvider);
+                  }
+
+                  context.pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(isEdit
+                          ? 'Servicio actualizado'
+                          : 'Servicio agregado'),
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Guardar'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
