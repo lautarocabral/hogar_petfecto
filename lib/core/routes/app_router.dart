@@ -48,6 +48,7 @@ import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinar
 import 'package:hogar_petfecto/features/seguridad/presentation/subscription_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/models/veterinaria_response_model.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/ofertas_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/renovar_suscripcion_page.dart';
@@ -351,6 +352,12 @@ class AppRouter {
         path: ReportePage.route,
         builder: (context, state) {
           return const ReportePage();
+        },
+      ),
+        GoRoute(
+        path: OfertasPage.route,
+        builder: (context, state) {
+          return const OfertasPage();
         },
       ),
     ],

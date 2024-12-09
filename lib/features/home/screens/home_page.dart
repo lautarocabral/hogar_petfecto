@@ -25,6 +25,7 @@ import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinar
 import 'package:hogar_petfecto/features/seguridad/providers/reporte_use_case.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/presentation/ofertas_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_scanner_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/veterinaria_facilities_edit_page.dart';
@@ -503,6 +504,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Backup realizado con exito')),
                 );
+              },
+            ),
+          if (user.grupos
+              .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 3)))
+            ListTile(
+              title: const Text('Mis ofertas'),
+              onTap: () {
+                context.push(OfertasPage.route);
               },
             ),
         ],

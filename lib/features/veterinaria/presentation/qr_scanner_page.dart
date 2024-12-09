@@ -1,20 +1,21 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hogar_petfecto/core/widgets/custom_app_bar_widget.dart';
+import 'package:hogar_petfecto/features/common/presentation/custom_success_page.dart';
+import 'package:hogar_petfecto/features/veterinaria/providers/qr_decode_use_case.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
-class QrScannerPage extends StatefulWidget {
+class QrScannerPage extends ConsumerStatefulWidget {
   const QrScannerPage({super.key});
   static const String route = '/qr-scanner-page';
 
-
   @override
-  State<QrScannerPage> createState() =>
-      _QrScannerPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _QrScannerPageState();
 }
 
-class _QrScannerPageState
-    extends State<QrScannerPage> {
+class _QrScannerPageState extends ConsumerState<QrScannerPage> {
   final MobileScannerController controller = MobileScannerController();
 
   Widget _buildBarcodeOverlay() {
@@ -109,7 +110,36 @@ class _QrScannerPageState
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               height: 100,
               color: Colors.black.withOpacity(0.4),
-              child: ScannedBarcodeLabel(barcodes: controller.barcodes),
+              child: StreamBuilder(
+                stream: controller.barcodes,
+                builder: (context, snapshot) {
+                  final scannedBarcodes = snapshot.data?.barcodes ?? [];
+
+                  if (scannedBarcodes.isEmpty) {
+                    return const Text(
+                      'Escanear codigo de descuento',
+                      overflow: TextOverflow.fade,
+                      style: TextStyle(color: Colors.white),
+                    );
+                  }
+                  if (scannedBarcodes.isNotEmpty) {
+                    ref.read(qrDecodeUserUseCaseProvider(
+                            scannedBarcodes.first.displayValue!)
+                        .future);
+                    // Realizar la navegación fuera del árbol de construcción
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      context.go(
+                        '${CustomSuccessPage.route}?message=¡QR escaneado con éxito!\nTu descuento ha sido aplicado\ncorrectamente\n¡Disfruta de tu compra!',
+                      );
+                    });
+                  }
+                  return const Text(
+                    'Escaneando QR',
+                    overflow: TextOverflow.fade,
+                    style: TextStyle(color: Colors.white),
+                  );
+                },
+              ),
             ),
           ),
         ],

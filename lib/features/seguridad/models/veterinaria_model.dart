@@ -38,6 +38,7 @@ class VeterinariaModel {
       'suscripciones': suscripciones.map((e) => e.toMap()).toList(),
       'direccionLocal': direccionLocal,
       'telefono': telefono,
+      'ofertas': [],
     };
   }
 }
