@@ -32,7 +32,7 @@ class Pedidos {
   String? fechaOrdenCompra;
   String? idPago;
   String? fechaPago;
-  int? monto;
+  double? monto;
   Cliente? cliente;
   Protectora? protectora;
 
@@ -101,7 +101,7 @@ class LineaPedido {
 
   LineaPedido.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    precio = json['precio'];
+       precio = (json['precio'] as num?)?.toDouble(); // Safely convert to double
     producto = json['producto'] != null
         ? Producto.fromJson(json['producto'])
         : null;

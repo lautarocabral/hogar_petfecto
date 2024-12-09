@@ -20,6 +20,7 @@ class ListadoProductosPage extends ConsumerStatefulWidget {
 
 class _ListadoProductosPageState extends ConsumerState<ListadoProductosPage> {
   final TextEditingController _searchController = TextEditingController();
+  List productosFiltrados = [];
 
   @override
   void initState() {
@@ -29,21 +30,27 @@ class _ListadoProductosPageState extends ConsumerState<ListadoProductosPage> {
     });
   }
 
-  void _filterProducts(String query) {
-    setState(() {});
+  void _filterProducts(String query, List productos) {
+    setState(() {
+      productosFiltrados = productos
+          .where((producto) =>
+              producto.titulo?.toLowerCase().contains(query.toLowerCase()) ??
+              false)
+          .toList();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final listaMerchandisingClienteAsyncValue =
         ref.watch(listaMerchandisingClienteUseCaseProvider);
+
     return Scaffold(
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton.icon(
             onPressed: () {
-              // Aquí se manejará la lógica para agregar al carrito
               context.push(CheckoutCarritoPage.route, extra: {
                 'cartItems': [],
               });
@@ -66,24 +73,31 @@ class _ListadoProductosPageState extends ConsumerState<ListadoProductosPage> {
                 border: OutlineInputBorder(),
                 prefixIcon: Icon(Icons.search),
               ),
-              onChanged: _filterProducts,
+              onChanged: (query) {
+                if (listaMerchandisingClienteAsyncValue is AsyncData) {
+                  _filterProducts(
+                    query,
+                    listaMerchandisingClienteAsyncValue.value?.productos ?? [],
+                  );
+                }
+              },
             ),
           ),
         ),
       ),
       body: listaMerchandisingClienteAsyncValue.when(
-        data: (listaMerchandisingClienteAsyncValue) {
+        data: (listaMerchandisingCliente) {
+          final productos = productosFiltrados.isNotEmpty
+              ? productosFiltrados
+              : listaMerchandisingCliente.productos ?? [];
+
           return ListView.builder(
-            itemCount: listaMerchandisingClienteAsyncValue.productos?.length,
+            itemCount: productos.length,
             itemBuilder: (context, index) {
-              final product =
-                  listaMerchandisingClienteAsyncValue.productos?[index];
-              final imageBytes = listaMerchandisingClienteAsyncValue
-                          .productos?[index].imagen !=
-                      null
-                  ? base64Decode(listaMerchandisingClienteAsyncValue
-                      .productos![index].imagen!)
-                  : null;
+              final product = productos[index];
+              final imageBytes =
+                  product.imagen != null ? base64Decode(product.imagen!) : null;
+
               return ListTile(
                 leading: CircleAvatar(
                   radius: 30,
@@ -93,9 +107,9 @@ class _ListadoProductosPageState extends ConsumerState<ListadoProductosPage> {
                       ? const Icon(Icons.card_giftcard_sharp, size: 30)
                       : null,
                 ),
-                title: Text(product?.titulo ?? ''),
-                subtitle: Text(product?.categoria?.nombre ?? ''),
-                trailing: Text('\$${product?.precio}'),
+                title: Text(product.titulo ?? ''),
+                subtitle: Text(product.categoria?.nombre ?? ''),
+                trailing: Text('\$${product.precio}'),
                 onTap: () {
                   context.push(
                     DescripcionProductoPage.route,

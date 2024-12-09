@@ -29,6 +29,7 @@ import 'package:hogar_petfecto/features/merchandising/presentation/oc_pdf_page.d
 import 'package:hogar_petfecto/features/seguridad/models/lista_grupos_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/lista_usuarios_response_model.dart';
 import 'package:hogar_petfecto/features/seguridad/models/veterinaria_model.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/auditoria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_coordinator_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/alta_grupo_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/editar_grupo_page.dart';
@@ -38,6 +39,7 @@ import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/login_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/recuperar_clave.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/reporte_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_client_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_page.dart';
@@ -337,6 +339,18 @@ class AppRouter {
         path: RenovarSuscripcionPage.route,
         builder: (context, state) {
           return const RenovarSuscripcionPage();
+        },
+      ),
+      GoRoute(
+        path: AuditoriaPage.route,
+        builder: (context, state) {
+          return const AuditoriaPage();
+        },
+      ),
+      GoRoute(
+        path: ReportePage.route,
+        builder: (context, state) {
+          return const ReportePage();
         },
       ),
     ],

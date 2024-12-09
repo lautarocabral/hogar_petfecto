@@ -13,13 +13,16 @@ import 'package:hogar_petfecto/features/merchandising/presentation/historial_mer
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/listado_productos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/models/login_response_model.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/auditoria_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/coordinator/profile_completion_coordinator.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_grupos/lista_grupos_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/gestion_usuarios/lista_usuarios_page.dart';
+import 'package:hogar_petfecto/features/seguridad/presentation/reporte_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_adoptante_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_client_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_protectora_page.dart';
 import 'package:hogar_petfecto/features/seguridad/presentation/sign_up_veterinaria_page.dart';
+import 'package:hogar_petfecto/features/seguridad/providers/reporte_use_case.dart';
 import 'package:hogar_petfecto/features/seguridad/providers/user_provider.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/gestion_suscripciones_page.dart';
 import 'package:hogar_petfecto/features/veterinaria/presentation/qr_code_page.dart';
@@ -471,6 +474,35 @@ class _HomePageState extends ConsumerState<HomePage> {
               title: const Text('Mi Suscripcion'),
               onTap: () {
                 context.push(GestionSuscripcionesPage.route);
+              },
+            ),
+          //REPORTES, AUDITORIA Y BACKUP
+          if (user.grupos
+              .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 9)))
+            ListTile(
+              title: const Text('Auditorias'),
+              onTap: () {
+                context.push(AuditoriaPage.route);
+              },
+            ),
+          if (user.grupos
+              .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 9)))
+            ListTile(
+              title: const Text('Reporte'),
+              onTap: () {
+                context.push(ReportePage.route);
+              },
+            ),
+          if (user.grupos
+              .any((grupo) => grupo.permisos.any((permiso) => permiso.id == 9)))
+            ListTile(
+              title: const Text('Backup'),
+              onTap: () async {
+                await ref.read(makeBackUpUseCaseProvider.future);
+                _scaffoldKey.currentState?.closeDrawer();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Backup realizado con exito')),
+                );
               },
             ),
         ],
