@@ -217,7 +217,7 @@ class _OfertasPageState extends ConsumerState<OfertasPage> {
                         controller: fechaInicioController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(Icons.date_range),
-                          hintText: 'Fecha de nacimiento',
+                          hintText: 'Desde',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),

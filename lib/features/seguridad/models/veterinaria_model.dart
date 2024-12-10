@@ -39,6 +39,7 @@ class VeterinariaModel {
       'direccionLocal': direccionLocal,
       'telefono': telefono,
       'ofertas': [],
+      'servicios': [],
     };
   }
 }

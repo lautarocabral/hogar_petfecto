@@ -61,7 +61,7 @@ class Pedidos {
     fechaOrdenCompra = json['fechaOrdenCompra'];
     idPago = json['idPago'];
     fechaPago = json['fechaPago'];
-    monto = json['monto'];
+    monto = (json['monto'] as num?)?.toDouble(); // Safely convert to double
     cliente =
         json['cliente'] != null ? Cliente.fromJson(json['cliente']) : null;
     protectora = json['protectora'] != null
@@ -101,10 +101,9 @@ class LineaPedido {
 
   LineaPedido.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-       precio = (json['precio'] as num?)?.toDouble(); // Safely convert to double
-    producto = json['producto'] != null
-        ? Producto.fromJson(json['producto'])
-        : null;
+    precio = (json['precio'] as num?)?.toDouble(); // Safely convert to double
+    producto =
+        json['producto'] != null ? Producto.fromJson(json['producto']) : null;
     cantidad = json['cantidad'];
   }
 
@@ -147,7 +146,7 @@ class Producto {
     descripcion = json['descripcion'];
     titulo = json['titulo'];
     stock = json['stock'];
-    precio = json['precio'];
+    precio = (json['precio'] as num?)?.toDouble();
     categoria = json['categoria'] != null
         ? Categoria.fromJson(json['categoria'])
         : null;

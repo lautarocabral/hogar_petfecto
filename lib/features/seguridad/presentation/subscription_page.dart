@@ -67,6 +67,7 @@ class _SubscriptionPageState extends ConsumerState<SubscriptionPage> {
       ));
 
       var credentials = widget.veterinariaModel!.toMap();
+      
 
       // Llama a la función para registrar la protectora
       await ref.read(veterinariaProvider(credentials).future);

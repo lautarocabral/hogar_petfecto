@@ -8,6 +8,7 @@ import 'package:hogar_petfecto/features/adopcion/presentation/gestion_mascota/li
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_adoptante_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/gestion_postulaciones/gestion_postulaciones_protectora_page.dart';
 import 'package:hogar_petfecto/features/adopcion/presentation/listado_mascotas_page.dart';
+import 'package:hogar_petfecto/features/home/providers/home_providers.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/gestion_merchandising/lista_productos_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_ventas_page.dart';
 import 'package:hogar_petfecto/features/merchandising/presentation/historial_merchandising/historial_compras_page.dart';
@@ -512,6 +513,14 @@ class _HomePageState extends ConsumerState<HomePage> {
               title: const Text('Mis ofertas'),
               onTap: () {
                 context.push(OfertasPage.route);
+              },
+            ),
+         
+            ListTile(
+              title: const Text('Cerrar sesion'),
+              onTap: () async {
+                await ref.read(logoutUseCaseProvider.future);
+                context.go('/');
               },
             ),
         ],
